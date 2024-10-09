@@ -5,3 +5,9 @@ export type Service = {
     status: "Activo" | "Indeterminado" | "Warning" | "Loading" | "Error";
   };
   
+  export type GranjaDTOModel = {
+    name: string;
+    code: string;
+    status: number;
+  };
+  
