@@ -20,9 +20,9 @@ const NavBar: React.FC = () => {
   const toggleSection = (section: "main" | "servers") => {
     setExpandedSection(expandedSection === section ? null : section);
   };
-
+  
   return (
-    <div className="w-64 bg-white fixed border-r border-gray-200 flex flex-col h-screen text-[#00693c] shadow-[4px_0_10px_rgba(0,0,0,0.2)]">
+    <div className="w-64 bg-white fixed  flex flex-col h-screen text-[#00693c] shadow-[4px_0_10px_rgba(0,0,0,0.2)]">
       <div className="p-4 flex items-center gap-3">
         <p><img
     src={Logo}
@@ -177,6 +177,7 @@ function SidebarItem({
   icon: React.ReactNode;
   label: string;
 }) {
+  
   return (
     <li>
       <a
