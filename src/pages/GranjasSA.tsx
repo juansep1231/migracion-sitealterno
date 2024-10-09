@@ -1,21 +1,7 @@
 import { useState, useMemo } from "react";
-import {
-  Search,
-  RefreshCw,
-  Play,
-  Pause,
-  Info,
-  ChevronLeft,
-  ChevronRight,
-} from "lucide-react";
+import { Search, Play, Pause, ChevronLeft, ChevronRight } from "lucide-react";
 import LoadingProdubanco from "../components/general/Loader";
-
-type Service = {
-  id: string;
-  name: string;
-  code: string;
-  status: "active" | "inactive" | "warning" | "loading";
-};
+import { Service } from "../types/granjasTypes/granjasSA";
 
 // Generar una lista de servicios mock
 const generateMockServices = (count: number): Service[] => {
@@ -23,7 +9,7 @@ const generateMockServices = (count: number): Service[] => {
     id: `service-${i + 1}`,
     name: `WCF_Aplicacional_Service_${i + 1}`,
     code: `172.24.${Math.floor(i / 255)}.${i % 255}`,
-    status: ["active", "inactive", "warning", "loading"][
+    status: ["Activo", "Indeterminado", "Warning", "Loading", "Error"][
       Math.floor(Math.random() * 4)
     ] as Service["status"],
   }));
@@ -53,32 +39,40 @@ const GranjasSA: React.FC = () => {
 
   const getStatusBadge = (status: Service["status"]) => {
     switch (status) {
-      case "active":
+      case "Activo":
         return (
           <span className="px-2 py-1 text-sm text-right font-semibold text-white bg-[#78BE20] rounded">
-            Active
+            Activo
           </span>
         );
-      case "inactive":
+      case "Indeterminado":
         return (
           <span className="px-2 py-1 text-sm font-semibold text-white bg-[#8B8B8B] rounded">
-            Inactive
+            Indeterminado
           </span>
         );
-      case "warning":
+      case "Warning":
         return (
           <span className="px-2 py-1 text-sm font-semibold text-white bg-[#FFBB56] rounded">
-            Warning
+            Algún error
           </span>
         );
-      case "loading":
+      case "Error":
+        return (
+          <span className="px-2 py-1 text-sm font-semibold text-white bg-[#BD0000] rounded">
+            Error
+          </span>
+        );
+      case "Loading":
         return <LoadingProdubanco />;
     }
   };
 
   return (
     <div className="container mx-auto p-4">
-      <h1 className="text-3xl font-bold mb-6">Granjas Producción</h1>
+      <h1 className="text-3xl font-bold mb-6 text-[#00693c]">
+        Granjas SA Producción
+      </h1>
       <div className="mb-6">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
           <div className="flex items-center w-full sm:w-auto">
@@ -95,17 +89,13 @@ const GranjasSA: React.FC = () => {
             />
           </div>
           <div className="flex flex-wrap gap-2">
-            <button className="flex items-center px-4 py-2 border border-gray-300 rounded hover:bg-gray-100">
-              <RefreshCw className="w-4 h-4 mr-2" />
-              Refresh
-            </button>
-            <button className="flex items-center px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700">
+            <button className="flex items-center px-4 py-2 bg-[#30BE71] text-white rounded hover:bg-[#00693C]">
               <Play className="w-4 h-4 mr-2" />
-              Start All
+              Iniciar Todos
             </button>
-            <button className="flex items-center px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700">
+            <button className="flex items-center px-4 py-2 bg-[#EE0000] text-white rounded hover:bg-[#BD0000]">
               <Pause className="w-4 h-4 mr-2" />
-              Stop All
+              Detener Todos
             </button>
           </div>
         </div>
@@ -114,7 +104,7 @@ const GranjasSA: React.FC = () => {
           {paginatedServices.map((service) => (
             <div
               key={service.id}
-              className="flex flex-col p-4 border border-gray-200 rounded shadow-sm"
+              className="flex flex-col p-4 border border-gray-200 rounded-md shadow-sm bg-white"
             >
               <div className="flex justify-between items-start mb-4">
                 <span
@@ -127,7 +117,7 @@ const GranjasSA: React.FC = () => {
               <p className="text-sm text-gray-500 mb-4">{service.code}</p>
               <div className="mt-auto flex items-center justify-end">
                 <button className="px-4 py-2 border border-gray-300 rounded hover:bg-gray-100">
-                  {service.status === "active" ? "Stop" : "Start"}
+                  {service.status === "Activo" ? "Stop" : "Start"}
                 </button>
                 <div className="w-full flex justify-end">
                   {getStatusBadge(service.status)}
@@ -162,19 +152,19 @@ const GranjasSA: React.FC = () => {
             <button
               onClick={() => setCurrentPage((prev) => Math.max(1, prev - 1))}
               disabled={currentPage === 1}
-              className="px-4 py-2 border border-gray-300 rounded hover:bg-gray-100"
+              className=" text-white flex px-4 py-2  bg-[#8B8B8B] rounded hover:bg-[#00693c]-60 items-center"
             >
               <ChevronLeft className="h-4 w-4" />
-              Previous
+              Anterior
             </button>
             <button
               onClick={() =>
                 setCurrentPage((prev) => Math.min(totalPages, prev + 1))
               }
               disabled={currentPage === totalPages}
-              className="px-4 py-2 border border-gray-300 rounded hover:bg-gray-100"
+              className=" flex px-4 py-2 text-white bg-[#8B8B8B] rounded hover:bg-[#00693C] items-center"
             >
-              Next
+              Siguiente
               <ChevronRight className="h-4 w-4" />
             </button>
           </div>
