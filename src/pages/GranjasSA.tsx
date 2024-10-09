@@ -1,6 +1,6 @@
 const GranjasSA: React.FC = () => {
   return (
-    <div>
+    <div className="bg-red-400">
       <h1>Granjas SA</h1>
     </div>
   );
