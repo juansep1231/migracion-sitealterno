@@ -8,10 +8,12 @@ interface LayoutProps {
 export const Layout = ({ children }: LayoutProps) => {
   return (
     <div className="flex min-h-screen">
-  <div className="flex flex-col h-full">
+  <div className="fixed h-screen w-64">
     <Navbar />
   </div>
-  <div className="flex flex-1 flex-col my-4">{children}</div>
+  <div className="flex-1 ml-64 overflow-y-auto p-8 bg-gray-100">
+    {children}
+  </div>
 </div>
 
   );

@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import F5Produnet from "../../pages/F5Produnet";
+import Logo from "../../assets/startPro.png";
 const NavBar: React.FC = () => {
   const [expandedSection, setExpandedSection] = useState<
     "main" | "servers" | null
@@ -21,19 +22,35 @@ const NavBar: React.FC = () => {
   };
 
   return (
-    <div className="flex h-screen w-64 flex-col bg-gray-800 text-green-600">
-      <div className="p-4">
-        <h1 className="text-xl font-bold">Robots Granjas Producc</h1>
+    <div className="w-64 bg-white fixed border-r border-gray-200 flex flex-col h-screen text-[#00693c] shadow-[4px_0_10px_rgba(0,0,0,0.2)]">
+      <div className="p-4 flex items-center gap-3">
+        <p><img
+    src={Logo}
+    alt="Company Logo"
+    className="w-24 h-20 object-contain"
+  /></p>
+        <h1 className="text-xl font-bold">Robots Granjas Producción</h1>
       </div>
       <nav className="flex-1 overflow-y-auto">
-        <ul className="space-y-2 p-2">
+        <ul className="space-y-2 p-2 ">
+        <li className="mb-4">
+        <Link to={"/"}>
+  <button
+    className="flex w-full font-medium items-center text-lg justify-between rounded-lg px-4 py-2 text-left text-black hover:bg-[#00693c] hover:text-white focus:outline-none focus:text-white focus:bg-[#00693c]"
+  >
+    Home
+  </button>
+</Link>
+
+      
+    </li>
           <SidebarSection
             title="Granjas, Servicios y Otros"
             isExpanded={expandedSection === "main"}
             onToggle={() => toggleSection("main")}
           >
             <li>
-              <h2 className="mb-2 px-4 text-xs font-semibold uppercase tracking-wide text-gray-400">
+              <h2 className="mb-2 px-4 text-xs font-semibold uppercase tracking-wide text-[#00693c]">
                 Granjas
               </h2>
               <ul className="space-y-1">
@@ -58,7 +75,7 @@ const NavBar: React.FC = () => {
               </ul>
             </li>
             <li>
-              <h2 className="mb-2 mt-6 px-4 text-xs font-semibold uppercase tracking-wide text-gray-400">
+              <h2 className="mb-2 mt-6 px-4 text-xs font-semibold uppercase tracking-wide text-[#00693c]">
                 Servicios
               </h2>
               <ul className="space-y-1">
@@ -86,7 +103,7 @@ const NavBar: React.FC = () => {
               </ul>
             </li>
             <li>
-              <h2 className="mb-2 mt-6 px-4 text-xs font-semibold uppercase tracking-wide text-gray-400">
+              <h2 className="mb-2 mt-6 px-4 text-xs font-semibold uppercase tracking-wide text-[#00693c]">
                 Otros
               </h2>
               <ul className="space-y-1">
@@ -143,7 +160,7 @@ function SidebarSection({
     <li className="mb-4">
       <button
         onClick={onToggle}
-        className="flex w-full items-center justify-between rounded-lg px-4 py-2 text-left text-gray-200 hover:bg-gray-700"
+        className="flex w-full items-center text-lg justify-between rounded-lg px-4 py-2 text-left font-bold text-black hover:ring-gray-200  focus:outline-none focus:ring-2 focus:ring-gray-300"
       >
         <span className="font-medium">{title}</span>
         {isExpanded ? <ChevronDown size={18} /> : <ChevronRight size={18} />}
@@ -164,7 +181,7 @@ function SidebarItem({
     <li>
       <a
         href="#"
-        className="flex items-center rounded-lg px-4 py-2 text-gray-300 hover:bg-gray-700 hover:text-white"
+        className="flex items-center rounded-lg px-4 py-2 text-gray-700 hover:bg-gray-300  focus:outline-none focus:text-white focus:bg-[#00693c]"
       >
         {icon}
         <span className="ml-3">{label}</span>
