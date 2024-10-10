@@ -20,7 +20,11 @@ const NavBar: React.FC = () => {
   const toggleSection = (section: "main" | "servers") => {
     setExpandedSection(expandedSection === section ? null : section);
   };
-  
+  const [selected, setSelected] = useState(false);
+
+  const handleLinkClick = () => {
+    setSelected(true); // Cambia el estado a seleccionado cuando se haga clic
+  };
   return (
     <div className="w-64 bg-white fixed  flex flex-col h-screen text-[#00693c] shadow-[4px_0_10px_rgba(0,0,0,0.2)]">
       <div className="p-4 flex items-center gap-3">
@@ -54,7 +58,8 @@ const NavBar: React.FC = () => {
                 Granjas
               </h2>
               <ul className="space-y-1">
-                <Link to={"/granjassp"}>
+              
+                <Link to={"/granjassp"} >
                   <SidebarItem icon={<Home size={18} />} label="GranjasSP" />
                 </Link>
                 <Link to={"/granjassa"}>
@@ -114,6 +119,7 @@ const NavBar: React.FC = () => {
                     label="FlushDNS"
                   />
                 </Link>
+                
                 <Link to={"/f5produnet"}>
                   {" "}
                   <SidebarItem icon={<Cpu size={18} />} label="F5 Produnet" />
