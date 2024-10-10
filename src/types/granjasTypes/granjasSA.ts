@@ -8,6 +8,6 @@ export type Service = {
   export type GranjaDTOModel = {
     name: string;
     code: string;
-    status: "Activo" | "Indeterminado" | "Warning" | "Loading" | "Error";
+    status: 0|1|2|5|"Loading";
   };
   

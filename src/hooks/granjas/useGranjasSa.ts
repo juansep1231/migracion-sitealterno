@@ -47,16 +47,13 @@ export const useGranjasSa = () => {
 
     try {
       const response = await axios.get(path);
-      return response.data; // Axios automatically parses JSON
+      return response.data; 
     } catch (error: any) {
       if (error.response) {
-        // The server responded with a status other than 200 range
         toast.error(`Error: ${error.response.data}`);
       } else if (error.request) {
-        // The request was made but no response was received
         toast.error("No response from server");
       } else {
-        // Something happened in setting up the request
         toast.error(`Error: ${error.message}`);
       }
       return [];
@@ -84,8 +81,6 @@ export const useGranjasSa = () => {
     };
 
     initialize();
-
-    // Cleanup: disconnect the hub when the component unmounts
     return () => {
       if (hubConnection) {
         hubConnection.stop();

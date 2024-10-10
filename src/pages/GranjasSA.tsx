@@ -1,18 +1,17 @@
 import { useState, useMemo } from "react";
 import { Search, Play, Pause, ChevronLeft, ChevronRight } from "lucide-react";
 import LoadingProdubanco from "../components/general/Loader";
-import { Service } from "../types/granjasTypes/granjasSA";
+import { GranjaDTOModel, Service } from "../types/granjasTypes/granjasSA";
 import { useGranjasSa } from "../hooks/granjas/useGranjasSa";
 
 // Generar una lista de servicios mock
-const generateMockServices = (count: number): Service[] => {
+const generateMockServices = (count: number): GranjaDTOModel[] => {
   return Array.from({ length: count }, (_, i) => ({
-    id: `service-${i + 1}`,
     name: `WCF_Aplicacional_Service_${i + 1}`,
     code: `172.24.${Math.floor(i / 255)}.${i % 255}`,
-    status: ["Activo", "Indeterminado", "Warning", "Loading", "Error"][
+    status: [0, 1, 2, 5][
       Math.floor(Math.random() * 4)
-    ] as Service["status"],
+    ] as GranjaDTOModel["status"],
   }));
 };
 
@@ -40,33 +39,34 @@ const GranjasSA: React.FC = () => {
     currentPage * itemsPerPage
   );
 
-  const getStatusBadge = (status: Service["status"]) => {
+  const getStatusBadge = (status: GranjaDTOModel["status"]) => {
     switch (status) {
-      case "Activo":
+      case 0:
         return (
-          <span className="px-2 py-1 text-sm text-right font-semibold text-white bg-[#78BE20] rounded">
+          <span className="px-2 py-1 text-sm font-semibold text-white bg-[#EE0000] rounded">
+            Offline
+          </span>
+        );
+      case 1:
+        return (
+          <span className="px-2 py-1 text-sm font-semibold text-white bg-[#FFBB56] rounded">
+            Alguno Offline
+          </span>
+        );
+      case 2:
+        return (
+          <span className="px-2 py-1 text-sm text-right font-semibold text-white bg-green-400 rounded">
             Activo
           </span>
         );
-      case "Indeterminado":
+      case 5:
         return (
           <span className="px-2 py-1 text-sm font-semibold text-white bg-[#8B8B8B] rounded">
             Indeterminado
           </span>
         );
-      case "Warning":
-        return (
-          <span className="px-2 py-1 text-sm font-semibold text-white bg-[#FFBB56] rounded">
-            Algún error
-          </span>
-        );
-      case "Error":
-        return (
-          <span className="px-2 py-1 text-sm font-semibold text-white bg-[#BD0000] rounded">
-            Error
-          </span>
-        );
-      case "Loading":
+
+      default:
         return <LoadingProdubanco />;
     }
   };
@@ -104,7 +104,7 @@ const GranjasSA: React.FC = () => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-          {servers.map((service) => (
+          {paginatedServices.map((service) => (
             <div
               key={service.name}
               className="flex flex-col p-4 border border-gray-200 rounded-md shadow-sm bg-white"
@@ -120,7 +120,7 @@ const GranjasSA: React.FC = () => {
               <p className="text-sm text-gray-500 mb-4">{service.code}</p>
               <div className="mt-auto flex items-center justify-end">
                 <button className="px-4 py-2 border border-gray-300 rounded hover:bg-gray-100">
-                  {service.status === "Activo" ? "Stop" : "Start"}
+                  {service.status === 0 ? "Stop" : "Start"}
                 </button>
                 <div className="w-full flex justify-end">
                   {getStatusBadge(service.status)}
@@ -140,10 +140,10 @@ const GranjasSA: React.FC = () => {
               }}
               className="p-2 border border-gray-300 rounded"
             >
-              <option value="12">12 per page</option>
-              <option value="24">24 per page</option>
-              <option value="36">36 per page</option>
-              <option value="48">48 per page</option>
+              <option value="12">12 por página</option>
+              <option value="24">24 por página</option>
+              <option value="36">36 por página</option>
+              <option value="48">48 por página</option>
             </select>
             <span className="ml-4">
               Showing {(currentPage - 1) * itemsPerPage + 1} -{" "}
