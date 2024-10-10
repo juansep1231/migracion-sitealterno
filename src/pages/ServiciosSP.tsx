@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Play, Pause, Activity, BarChart } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
+//import { Servidor } from "../types/serviciosTypes/serviciosSP";
 
 interface Servicio {
   name: string;
@@ -127,7 +128,16 @@ const ServiciosSP: React.FC = () => {
                 </tr>
               </thead>
               <tbody>
+              <AnimatePresence>
+  
                 {servidor.servicios.map((servicio, servicioIndex) => (
+                  <motion.tr
+                  key={ServiceWorker.name}
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  transition={{ duration: 0.3 }}
+                >
                   <tr key={servicioIndex}>
                     <td className="py-2 px-4 border">{servicio.name}</td>
                     <td className={`py-2 px-4 border ${servicio.status === 1 ? 'bg-green-200' : 'bg-red-200'}`}>
@@ -142,8 +152,13 @@ const ServiciosSP: React.FC = () => {
                       </button>
                     </td>
                   </tr>
+                  </motion.tr>
+
                 ))}
+              </AnimatePresence>
+
               </tbody>
+ 
             </table>
           </div>
         ))}
