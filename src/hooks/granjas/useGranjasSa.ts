@@ -19,7 +19,14 @@ export const useGranjasSa = () => {
         if (server.code === cluster) {
           let newStatus: GranjaStatusOnly["status"];
           const parsedStatus = parseInt(message, 10);
-          const newStatus = isNaN(parsedStatus) ? 5 : parsedStatus;
+          if (!isNaN(parsedStatus) && [0, 1, 2, 5].includes(parsedStatus)) {
+            newStatus = parsedStatus as GranjaStatusOnly["status"];
+          } else if (message === "Loading") {
+            newStatus = "Loading";
+          } else {
+            newStatus = 5;
+          }
+  
           return {
             ...server,
             status: newStatus,
