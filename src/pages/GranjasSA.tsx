@@ -28,16 +28,16 @@ const GranjasSA: React.FC = () => {
   const [confirmMessage, setConfirmMessage] = useState("");
   const [confirmAction, setConfirmAction] = useState<() => void>(() => {});
 
-  //const { servers, count, loading } = useGranjasSa();
+  const { servers, count, loading } = useGranjasSa();
 
   const filteredServices = useMemo(() => {
-    return services.filter(
+    return servers.filter(
       (service) =>
         (activeTab === "all" || service.status === activeTab) &&
         (service.name.toLowerCase().includes(filter.toLowerCase()) ||
           service.code.toLowerCase().includes(filter.toLowerCase()))
     );
-  }, [services, filter, activeTab]);
+  }, [servers, filter, activeTab]);
 
   const totalPages = Math.ceil(filteredServices.length / itemsPerPage);
   const paginatedServices = filteredServices.slice(
