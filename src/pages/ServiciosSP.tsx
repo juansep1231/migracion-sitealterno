@@ -105,7 +105,7 @@ const ServiciosSP: React.FC = () => {
     <> 
       <div> 
         <div className="text-3xl font-bold mb-4"> 
-          Servicio Windows SA Producción 
+          Servicio Windows Producción 
         </div>
         {/* Uso de IndexServicios */}
         <IndexServicios
