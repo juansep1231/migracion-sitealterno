@@ -58,7 +58,7 @@ const IndexServiciosSA: React.FC<TIndexServiciosSAProps> = ({
       {/* Servidores Activos */}
       <div className="bg-white p-4 rounded-lg border border-gray-200 shadow-xl">
         <div className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <div className="text-lg font-medium">Servidores Activos</div>
+          <div className="text-lg font-medium">Servidores Corriendo</div>
           <BarChart className="h-4 w-4 text-muted-foreground" />
         </div>
         <div className="text-3xl mt-4 text-center font-bold">
@@ -74,7 +74,7 @@ const IndexServiciosSA: React.FC<TIndexServiciosSAProps> = ({
       <div className="bg-white p-4 rounded-lg border border-gray-200 shadow-xl">
         <h4 className="text-lg font-semibold text-muted-foreground flex items-center">
           <AlertTriangle className="h-6 w-6 mr-3 text-yellow-500" />
-          Servicios Inactivos:
+          Servidores Detenidos
         </h4>
         <div className="h-20 w-full font-medium rounded-md border p-2 overflow-y-auto">
           <ul className="text-base">
