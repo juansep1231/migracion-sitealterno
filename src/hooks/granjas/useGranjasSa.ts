@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { HubConnection, HubConnectionBuilder } from "@microsoft/signalr";
-import { GranjaDTOModel } from "../../types/granjasTypes/granjasSA";
+import { GranjaDTOModel, GranjaStatusOnly } from "../../types/granjasTypes/granjasSA";
 import axios from "axios";
 import { toast } from "react-toastify";
 
@@ -13,8 +13,21 @@ export const useGranjasSa = () => {
     null
   );
 
-  const changeClusterStateReload = (cluster: string, message: string) => {
-    console.log(`Cluster: ${cluster}, Message: ${message}`);
+  const changeClusterStateReload = (cluster: string, message: string): void => {
+    setServers((prevServers) =>
+      prevServers.map((server) => {
+        if (server.code === cluster) {
+          let newStatus: GranjaStatusOnly["status"];
+          const parsedStatus = parseInt(message, 10);
+          const newStatus = isNaN(parsedStatus) ? 5 : parsedStatus;
+          return {
+            ...server,
+            status: newStatus,
+          };
+        }
+        return server;
+      })
+    );
   };
 
   // Function to load servers
