@@ -63,13 +63,11 @@ const ServiciosSA: React.FC = () => {
     setData(updatedData); 
   };
 
-  const toggleAll = (status: number) => { 
-    const updatedData = data.map((servidor) => ({ 
-      ...servidor, 
-      servicios: servidor.servicios.map((servicio) => ({ 
-        ...servicio, 
-        status: status, 
-      })), 
+  const toggleAll = (servidorIndex: number, status: number) => { 
+    const updatedData = [...data]; 
+    updatedData[servidorIndex].servicios = updatedData[servidorIndex].servicios.map((servicio) => ({ 
+      ...servicio, 
+      status: status, 
     })); 
     setData(updatedData); 
   };
@@ -96,7 +94,7 @@ const ServiciosSA: React.FC = () => {
             servidor={servidor} 
             servidorIndex={servidorIndex} 
             toggleService={toggleService} 
-            toggleAll={toggleAll} 
+            toggleAll={(status: number) => toggleAll(servidorIndex, status)} 
           /> 
         ))
       ) : (

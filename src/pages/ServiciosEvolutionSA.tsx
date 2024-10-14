@@ -85,22 +85,19 @@ const ServiciosEvolutionSA: React.FC = () => {
     setData(updatedData); 
   };
 
-  const toggleAll = (status: number) => { 
-    const updatedData = data.map((servidor) => ({ 
-      ...servidor, 
-      servicios: servidor.servicios.map((servicio) => ({ 
-        ...servicio, 
-        status: status, 
-      })), 
+  const toggleAll = (servidorIndex: number, status: number) => { 
+    const updatedData = [...data]; 
+    updatedData[servidorIndex].servicios = updatedData[servidorIndex].servicios.map((servicio) => ({ 
+      ...servicio, 
+      status: status, 
     })); 
     setData(updatedData); 
   };
-
   return ( 
     <> 
       <div> 
         <div className="text-3xl font-bold mb-4"> 
-          Servicio Windows SA Producción 
+          Servicio Windows Evolution SA Producción 
         </div>
         {/* Uso de IndexServicios */}
         <IndexServicios
@@ -118,7 +115,7 @@ const ServiciosEvolutionSA: React.FC = () => {
             servidor={servidor} 
             servidorIndex={servidorIndex} 
             toggleService={toggleService} 
-            toggleAll={toggleAll} 
+            toggleAll={(status: number) => toggleAll(servidorIndex, status)} 
           /> 
         ))
       ) : (
