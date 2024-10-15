@@ -8,9 +8,11 @@ export type Service = {
   export type GranjaDTOModel = {
     name: string;
     code: string;
-    status: 0|1|2|5|"Loading";
+    status: 0|1|2|5|"Cargando";
   };
 
 export type GranjaCodeOnly = Pick<GranjaDTOModel, 'code'>;
 
 export type GranjaStatusOnly = Pick<GranjaDTOModel, 'status'>;
+
+export type GranjasStatusText = 'Todos' | 'Activos' |'Offline'| 'Alguno Offline'|'Indeterminado'
