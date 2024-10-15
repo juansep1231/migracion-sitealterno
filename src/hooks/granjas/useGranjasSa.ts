@@ -5,7 +5,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 
 
-// Custom hook to handle server loading and Hub connection
+
 export const useGranjasSa = () => {
   const [servers, setServers] = useState<GranjaDTOModel[]>([]);
   const [count, setCount] = useState(0);
@@ -37,19 +37,19 @@ export const useGranjasSa = () => {
     );
   };
 
-  //Start all clusters 
+
 
   const startAllClusters = async () => {
     try {
       const path = `${import.meta.env.VITE_API_BASE_URL_ADMINISTRACION}${import.meta.env.VITE_API_ENDPOINT_STARTALL_GRANJASSA}`;
 
-      // Update server states to "3" (starting) and prepare clusters array
+
       const clusters = servers.map((server) => {
         changeClusterStateReload(server.code, "3");
         return { code: server.code };
       });
 
-      // Make the POST request to start clusters
+
       const response = await axios.post(
         `${path}?command=start&command2=global`,
         clusters
@@ -60,14 +60,13 @@ export const useGranjasSa = () => {
         throw new Error("Error al iniciar los clusters");
       }
     } catch (error: any) {
-      // Handle error
+
       const errorMessage =
         error.response?.data?.message ||
         error.message ||
         "An error occurred while starting clusters.";
       toast.error(errorMessage);
 
-      // Update server states to "5" (error state)
       servers.forEach((server) => {
         changeClusterStateReload(server.code, "5");
       });
@@ -101,9 +100,9 @@ export const useGranjasSa = () => {
       const path = `${import.meta.env.VITE_API_BASE_URL_ADMINISTRACION}${import.meta.env.VITE_API_ENDPOINT_START_NLB_QUERY}`;
 console.log("ejecutandogetnlbstatus")
       const clusters = loadedServers.map((server) => {
-        const serverCode = server.code; // Capture the code
-        changeClusterStateReload(serverCode, "3"); // Update state
-        return { code: serverCode }; // Use the captured code
+        const serverCode = server.code; 
+        changeClusterStateReload(serverCode, "3"); 
+        return { code: serverCode }; 
       });
       console.log("clusters",clusters);
       const response = await axios.post(`${path}?command=global`, clusters);
@@ -128,7 +127,7 @@ console.log("ejecutandogetnlbstatus")
   // useEffect to load servers and handle Hub connection
   useEffect(() => {
     const initialize = async () => {
-      setLoading(true); // Start loading state
+      setLoading(true); 
       try {
         const loadedServers = await loadServersAsync();
         setServers(loadedServers);
@@ -136,7 +135,7 @@ console.log("ejecutandogetnlbstatus")
         if (loadedServers && loadedServers.length > 0) {
           setCount((prevCount) => prevCount + 1);
           toast.success("Servidores actualizados");
-           // Call getNLBStatusAsync after loading servers
+
       await getNLBStatusAsync(loadedServers);
         }
        
@@ -144,7 +143,7 @@ console.log("ejecutandogetnlbstatus")
         setServers([]);
         toast.error("No se puede cargar los servidores");
       } finally {
-        setLoading(false); // End loading state
+        setLoading(false);
       }
     };
 
