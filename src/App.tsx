@@ -6,7 +6,7 @@ import { MainRouter } from "./routes/MainRouter";
 function App() {
   return (
     <>
-      <ToastContainer />
+      <ToastContainer autoClose={2000} />
       <MainRouter />
     </>
   );
