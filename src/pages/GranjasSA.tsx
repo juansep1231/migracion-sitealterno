@@ -31,7 +31,8 @@ const GranjasSA: React.FC = () => {
   const [confirmMessage, setConfirmMessage] = useState("");
   const [confirmAction, setConfirmAction] = useState<() => void>(() => {});
   //const allServices = useMemo(() => generateMockServices(100), []);
-  const { servers, handleAllClustersAction } = useGranjasSa();
+  const { servers, handleAllClustersAction, handleSingleClusterAction } =
+    useGranjasSa();
   //const [services, setServices] = useState<GranjaDTOModel[]>(allServices);
   const [activeTab, setActiveTab] = useState<GranjasStatusText | "Todos">(
     "Todos"
@@ -42,17 +43,38 @@ const GranjasSA: React.FC = () => {
     await handleAllClustersAction(action); // Call the function from the hook
   };
 
+  const executeActionSingle = async (code: string, action: string) => {
+    setShowConfirm(false);
+    await handleSingleClusterAction(code, action);
+  };
+
+  //functions for single
+  const handleStartSingleAction = (code: string) => {
+    const action: string = "start";
+    setConfirmMessage(`¿Desea iniciar la granja ${code}?`);
+    setConfirmAction(() => () => executeActionSingle(code, action));
+    setShowConfirm(true);
+  };
+
+  const handleStopSingleAction = (code: string) => {
+    const action: string = "stop";
+    setConfirmMessage(`¿Desea detener la granja ${code}?`);
+    setConfirmAction(() => () => executeActionSingle(code, action));
+    setShowConfirm(true);
+  };
+
+  //functions for all
   const handleStartAll = () => {
     const action: string = "start";
     setConfirmMessage("¿Desea iniciar todas las granjas?");
-    setConfirmAction(() => executeActionForAll(action));
+    setConfirmAction(() => () => executeActionForAll(action));
     setShowConfirm(true);
   };
 
   const handleStopAll = () => {
     const action: string = "stop";
     setConfirmMessage("¿Desea detener todas las granjas?");
-    setConfirmAction(() => executeActionForAll(action));
+    setConfirmAction(() => () => executeActionForAll(action));
     setShowConfirm(true);
   };
 
@@ -87,6 +109,8 @@ const GranjasSA: React.FC = () => {
               activeTab={tab}
               onStartAll={handleStartAll}
               onStopAll={handleStopAll}
+              onStartSingle={handleStartSingleAction}
+              onStopSingle={handleStopSingleAction}
             />
           </TabPanel>
         ))}

@@ -1,8 +1,9 @@
 import { useEffect, useRef, useState } from "react";
 import { HubConnection, HubConnectionBuilder } from "@microsoft/signalr";
-import { GranjaDTOModel, GranjaStatusOnly } from "../../types/granjasTypes/granjasSA";
+import { GranjaCodeOnly, GranjaDTOModel, GranjaStatusOnly } from "../../types/granjasTypes/granjasSA";
 import axios from "axios";
 import { toast } from "react-toastify";
+
 
 
 
@@ -11,6 +12,7 @@ export const useGranjasSa = () => {
   const [count, setCount] = useState(0);
   const [loading, setLoading] = useState(false);
   const hubConnectionRef = useRef<HubConnection | null>(null);
+  
   
 
   const changeClusterStateReload = (cluster: string, message: string): void => {
@@ -37,11 +39,43 @@ export const useGranjasSa = () => {
     );
   };
 
+  const handleSingleClusterAction = async (code: string, actionCommand: string) => {
+    try {
+      const path = `${import.meta.env.VITE_API_BASE_URL_ADMINISTRACION}${import.meta.env.VITE_API_ENDPOINT_REMOTE_EXECUTE_NLB_ACTION}`;
+
+      changeClusterStateReload(code, "3");
+      const clusters:GranjaCodeOnly[] = [{code}];
 
 
+      const response = await axios.post(
+        `${path}?command=${actionCommand}&command2=global`,
+        clusters
+      );
+
+      console.log("mensajeee",response.data.message);
+      if (response.data.message.includes("error")) {
+        const errorMessage = actionCommand === "start" ? "Error al iniciar el cluster" : "Error al detener el cluster";
+        throw new Error(errorMessage);
+      }
+    } catch (error: any) {
+
+      const errorMessage =
+        error.response?.data?.message ||
+        error.message ||
+        "Error al iniciar los clusters";
+      toast.error(errorMessage);
+
+      servers.forEach((server) => {
+        changeClusterStateReload(server.code, "5");
+      });
+    }
+  };
+
+
+  //Function to handle all clusters action based on a command (start or stop)
   const handleAllClustersAction = async (actionCommand:string) => {
     try {
-      const path = `${import.meta.env.VITE_API_BASE_URL_ADMINISTRACION}${import.meta.env.VITE_API_ENDPOINT_STARTALL_GRANJASSA}`;
+      const path = `${import.meta.env.VITE_API_BASE_URL_ADMINISTRACION}${import.meta.env.VITE_API_ENDPOINT_REMOTE_EXECUTE_NLB_ACTION}`;
 
 
       const clusters = servers.map((server) => {
@@ -57,7 +91,8 @@ export const useGranjasSa = () => {
 
       console.log("mensajeee",response.data.message);
       if (response.data.message.includes("error")) {
-        throw new Error("Error al iniciar los clusters");
+        const errorMessage = actionCommand === "start" ? "Error al iniciar los clusters" : "Error al detener los clusters";
+        throw new Error(errorMessage);
       }
     } catch (error: any) {
 
@@ -187,5 +222,5 @@ console.log("ejecutandogetnlbstatus")
     };
   }, []);
 
-  return { servers, count, loading, handleAllClustersAction };
+  return { servers, count, loading, handleAllClustersAction, handleSingleClusterAction };
 };

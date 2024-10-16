@@ -14,6 +14,8 @@ interface ServicesTabContentProps {
   activeTab: GranjasStatusText;
   onStartAll: () => void;
   onStopAll: () => void;
+  onStartSingle: (code: string) => void;
+  onStopSingle: (code: string) => void;
 }
 
 const ServicesTabContent: React.FC<ServicesTabContentProps> = ({
@@ -21,6 +23,8 @@ const ServicesTabContent: React.FC<ServicesTabContentProps> = ({
   activeTab,
   onStartAll,
   onStopAll,
+  onStartSingle,
+  onStopSingle,
 }) => {
   const [filter, setFilter] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
@@ -109,8 +113,15 @@ const ServicesTabContent: React.FC<ServicesTabContentProps> = ({
             </div>
             <p className="text-sm text-gray-500 mb-4">{service.code}</p>
             <div className="mt-auto flex items-center justify-end">
-              <button className="px-4 py-2 border border-gray-300 rounded hover:bg-gray-100">
-                {service.status === 0 ? "Stop" : "Start"}
+              <button
+                className="px-4 py-2 border border-gray-300 rounded hover:bg-gray-100"
+                onClick={
+                  service.status !== 0
+                    ? () => onStartSingle(service.code)
+                    : () => onStopSingle(service.code)
+                }
+              >
+                {service.status !== 0 ? "Start" : "Stop"}
               </button>
               <div className="w-full flex justify-end">
                 {getStatusBadge(service.status)}
