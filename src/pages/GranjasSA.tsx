@@ -31,29 +31,28 @@ const GranjasSA: React.FC = () => {
   const [confirmMessage, setConfirmMessage] = useState("");
   const [confirmAction, setConfirmAction] = useState<() => void>(() => {});
   //const allServices = useMemo(() => generateMockServices(100), []);
-  const { servers, startAllClusters } = useGranjasSa();
+  const { servers, handleAllClustersAction } = useGranjasSa();
   //const [services, setServices] = useState<GranjaDTOModel[]>(allServices);
   const [activeTab, setActiveTab] = useState<GranjasStatusText | "Todos">(
     "Todos"
   );
 
+  const executeActionForAll = async (action: string) => {
+    setShowConfirm(false);
+    await handleAllClustersAction(action); // Call the function from the hook
+  };
+
   const handleStartAll = () => {
+    const action: string = "start";
     setConfirmMessage("¿Desea iniciar todas las granjas?");
-    setConfirmAction(() => executeStartAll);
+    setConfirmAction(() => executeActionForAll(action));
     setShowConfirm(true);
   };
 
-  const executeStartAll = async () => {
-    setShowConfirm(false);
-    await startAllClusters(); // Call the function from the hook
-  };
-
   const handleStopAll = () => {
-    /* TODOOOOOOOOO*/
-    setConfirmMessage(
-      "¿Estás seguro de que quieres detener todos los procesos?"
-    );
-    // setConfirmAction(() => handleStopAll);
+    const action: string = "stop";
+    setConfirmMessage("¿Desea detener todas las granjas?");
+    setConfirmAction(() => executeActionForAll(action));
     setShowConfirm(true);
   };
 

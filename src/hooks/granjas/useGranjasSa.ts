@@ -39,7 +39,7 @@ export const useGranjasSa = () => {
 
 
 
-  const startAllClusters = async () => {
+  const handleAllClustersAction = async (actionCommand:string) => {
     try {
       const path = `${import.meta.env.VITE_API_BASE_URL_ADMINISTRACION}${import.meta.env.VITE_API_ENDPOINT_STARTALL_GRANJASSA}`;
 
@@ -51,7 +51,7 @@ export const useGranjasSa = () => {
 
 
       const response = await axios.post(
-        `${path}?command=start&command2=global`,
+        `${path}?command=${actionCommand}&command2=global`,
         clusters
       );
 
@@ -64,7 +64,7 @@ export const useGranjasSa = () => {
       const errorMessage =
         error.response?.data?.message ||
         error.message ||
-        "An error occurred while starting clusters.";
+        "Error al iniciar los clusters";
       toast.error(errorMessage);
 
       servers.forEach((server) => {
@@ -187,5 +187,5 @@ console.log("ejecutandogetnlbstatus")
     };
   }, []);
 
-  return { servers, count, loading, startAllClusters };
+  return { servers, count, loading, handleAllClustersAction };
 };
