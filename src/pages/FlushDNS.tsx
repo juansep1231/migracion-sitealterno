@@ -31,6 +31,10 @@ const FlushDNS: React.FC = () => {
 
   // Crear un estado local para los servicios
   const [services, setServices] = useState<Service[]>(allServices);
+  
+  // Crear un estado para controlar si un botón está deshabilitado por servicio
+  const [disabledButtons, setDisabledButtons] = useState<{ [key: string]: boolean }>({});
+
   const getRandomStatus = () => {
     return validStatuses[Math.floor(Math.random() * validStatuses.length)];
   };
@@ -85,6 +89,9 @@ const FlushDNS: React.FC = () => {
         ? { ...service, status: action === "start" ? "Activo" : "Error" }
         : service
     ));
+    
+    // Deshabilitar el botón solo del servicio correspondiente
+    setDisabledButtons(prev => ({ ...prev, [id]: true }));
   };
 
   const handleConfirm = () => {
@@ -102,7 +109,7 @@ const FlushDNS: React.FC = () => {
             <Search className="w-4 h-4 mr-2 text-gray-500" />
             <input
               type="text"
-              placeholder="Search services..."
+              placeholder="Buscar servicios..."
               value={filter}
               onChange={(e) => {
                 setFilter(e.target.value);
@@ -119,6 +126,7 @@ const FlushDNS: React.FC = () => {
               setConfirmAction(() => handleStartAll);
               setShowConfirm(true);
             }}
+            hideStopAll={true}
             onStopAll={() => {
               setConfirmMessage("¿Estás seguro de que quieres detener todos los procesos?");
               setConfirmAction(() => handleStopAll);
@@ -158,8 +166,9 @@ const FlushDNS: React.FC = () => {
                     setShowConfirm(true);
                   }}
                   className="px-4 py-2 border border-gray-300 rounded hover:bg-gray-100"
+                  disabled={disabledButtons[service.id]} // Habilitar o deshabilitar según el estado del botón
                 >
-                  {service.status === "Activo" ? "Detener" : "Ejecutar"}
+                  {service.status === "Activo" ? "" : "Ejecutar"}
                 </button>
                 
                 <div className="w-full flex justify-end">{getStatusBadge(service.status)}</div>
@@ -188,17 +197,17 @@ const FlushDNS: React.FC = () => {
             <button
               onClick={() => setCurrentPage(currentPage - 1)}
               disabled={currentPage === 1}
-              className={`px-4 py-2 bg-gray-300 rounded ${currentPage === 1 ? "opacity-50 cursor-not-allowed" : "hover:bg-gray-400"}`}
+              className="px-2 py-1 border border-gray-300 rounded hover:bg-gray-100"
             >
-              <ChevronLeft className="w-4 h-4" />
+              <ChevronLeft />
             </button>
-            <span>{`${currentPage} / ${totalPages}`}</span>
+            <span>Página {currentPage} de {totalPages}</span>
             <button
               onClick={() => setCurrentPage(currentPage + 1)}
               disabled={currentPage === totalPages}
-              className={`px-4 py-2 bg-gray-300 rounded ${currentPage === totalPages ? "opacity-50 cursor-not-allowed" : "hover:bg-gray-400"}`}
+              className="px-2 py-1 border border-gray-300 rounded hover:bg-gray-100"
             >
-              <ChevronRight className="w-4 h-4" />
+              <ChevronRight />
             </button>
           </div>
         </div>

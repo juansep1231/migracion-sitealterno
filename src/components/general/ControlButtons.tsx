@@ -4,9 +4,10 @@ import { Play, Pause } from "lucide-react";
 interface ControlButtonsProps {
   onStartAll: () => void;
   onStopAll: () => void;
+  hideStopAll?: boolean; // Propiedad opcional para ocultar el botón Detener Todos
 }
 
-const ControlButtons: React.FC<ControlButtonsProps> = ({ onStartAll, onStopAll }) => {
+const ControlButtons: React.FC<ControlButtonsProps> = ({ onStartAll, onStopAll, hideStopAll }) => {
   return (
     <div className="flex flex-wrap gap-2">
       <button
@@ -16,13 +17,15 @@ const ControlButtons: React.FC<ControlButtonsProps> = ({ onStartAll, onStopAll }
         <Play className="w-4 h-4 mr-2" />
         Iniciar Todos
       </button>
-      <button
-        onClick={onStopAll}
-        className="flex items-center px-4 py-2 bg-[#EE0000] text-white rounded hover:bg-[#BD0000]"
-      >
-        <Pause className="w-4 h-4 mr-2" />
-        Detener Todos
-      </button>
+      {!hideStopAll && ( // Mostrar el botón Detener Todos solo si hideStopAll es falso o indefinido
+        <button
+          onClick={onStopAll}
+          className="flex items-center px-4 py-2 bg-[#EE0000] text-white rounded hover:bg-[#BD0000]"
+        >
+          <Pause className="w-4 h-4 mr-2" />
+          Detener Todos
+        </button>
+      )}
     </div>
   );
 };
