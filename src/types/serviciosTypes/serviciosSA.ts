@@ -14,5 +14,4 @@ export type Servidor = {
     }[];
   }
 
-  export type ServicioServicioOnly = Pick<ServicioDTOModel, 'servicios'>;
-
+  

@@ -2,7 +2,7 @@ import TablaServicios from "../components/general/TablaServicios";
 import { useState, useEffect } from 'react';
 import IndexServicios from "../components/general/IndexTablaServicios";
 import { ServicioDTOModel } from "../types/serviciosTypes/serviciosSA";
-import { useServicioSa } from "../hooks/servicios/useServicioSa";
+import { useServicioSa } from "../hooks/servicios/useServicio";
 
 type Servidor = { 
   servidor: string; 
