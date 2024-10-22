@@ -112,7 +112,7 @@ const NavBar: React.FC = () => {
                 Otros
               </h2>
               <ul className="space-y-1">
-                <Link to={"/flusdns"}>
+                <Link to={"/flushdns"}>
                   {" "}
                   <SidebarItem
                     icon={<RefreshCw size={18} />}

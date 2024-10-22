@@ -1,4 +1,5 @@
 import { Layout } from "../components/general/Layout";
+import FlushDNS from "../pages/FlushDNS";
 import GranjasEvolutionSA from "../pages/GranjasEvolutionSA";
 import GranjasEvolutionSP from "../pages/GranjasEvolutionSP";
 import GranjasSA from "../pages/GranjasSA";
@@ -26,6 +27,14 @@ export const granjasRoutes = [
     element: (
       <Layout>
         <GranjasSA />
+      </Layout>
+    ),
+  },
+  {
+    path: "/flushdns",
+    element: (
+      <Layout>
+        <FlushDNS />
       </Layout>
     ),
   },

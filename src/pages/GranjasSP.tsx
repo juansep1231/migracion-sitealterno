@@ -26,9 +26,14 @@ const GranjasSP: React.FC = () => {
   const [showConfirm, setShowConfirm] = useState(false);
   const [confirmMessage, setConfirmMessage] = useState("");
   const [confirmAction, setConfirmAction] = useState<() => void>(() => {});
+  const validStatuses: Service["status"][] = ["Activo", "Indeterminado", "Warning", "Loading"];
+
 
   // Crear un estado local para los servicios
   const [services, setServices] = useState<Service[]>(allServices);
+  const getRandomStatus = () => {
+    return validStatuses[Math.floor(Math.random() * validStatuses.length)];
+  };
 
   const filteredServices = useMemo(() => {
     return services.filter(
@@ -66,8 +71,11 @@ const GranjasSP: React.FC = () => {
   };
 
   const handleStartAll = () => {
-    setServices(services.map(service => ({ ...service, status: "Activo" })));
-    setShowConfirm(false);
+     setServices(services.map(service => ({
+    ...service,
+    status: getRandomStatus() // Asignar un estado aleatorio
+  })));
+  setShowConfirm(false);
   };
 
   // Función para manejar el cambio de estado de un servicio individual
