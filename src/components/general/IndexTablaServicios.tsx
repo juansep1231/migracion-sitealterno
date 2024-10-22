@@ -1,14 +1,14 @@
 import { Server, BarChart, Search, AlertTriangle } from "lucide-react";
 import { useState, useEffect } from "react";
 
-interface Servicio {
-  name: string;
-  status: number;
-}
+
 
 interface Servidor {
-  servidor: string;
-  servicios: Servicio[];
+  servidor: string; 
+    servicios: { 
+      name: string; 
+      status: number; 
+    }[];
 }
 
 interface TIndexServiciosSAProps {
@@ -58,7 +58,7 @@ const IndexServiciosSA: React.FC<TIndexServiciosSAProps> = ({
       {/* Servidores Activos */}
       <div className="bg-white p-4 rounded-lg border border-gray-200 shadow-xl">
         <div className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <div className="text-lg font-medium">Servidores Corriendo</div>
+          <div className="text-lg font-medium">Servicios Corriendo</div>
           <BarChart className="h-4 w-4 text-muted-foreground" />
         </div>
         <div className="text-3xl mt-4 text-center font-bold">
@@ -80,7 +80,7 @@ const IndexServiciosSA: React.FC<TIndexServiciosSAProps> = ({
           <ul className="text-base">
             {inactiveServices.map((servidor) => (
               <li key={servidor.servidor} className="py-1 flex">
-                {servidor.servidor} → Servicio Detenido
+                {servidor.servidor}
                 <ul>
                   {servidor.servicios
                     .filter((servicio) => servicio.status === 0)
