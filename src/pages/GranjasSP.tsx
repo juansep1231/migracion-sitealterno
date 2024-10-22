@@ -91,12 +91,7 @@ const GranjasSP: React.FC = () => {
   };
 
   const handleStartAll = () => {
-    setServices(
-      services.map((service) => ({
-        ...service,
-        status: getRandomStatus(), // Asignar un estado aleatorio
-      }))
-    );
+    setServices(services.map((service) => ({ ...service, status: "Activo" })));
     setShowConfirm(false);
   };
 
