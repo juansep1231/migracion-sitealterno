@@ -7,7 +7,7 @@ import { toast } from "react-toastify";
 
 
 
-export const useGranjasSa = () => {
+export const useGranjas = (path:string) => {
   const [servers, setServers] = useState<GranjaDTOModel[]>([]);
   const [count, setCount] = useState(0);
   const [loading, setLoading] = useState(false);
@@ -110,9 +110,9 @@ export const useGranjasSa = () => {
 
 
   const loadServersAsync = async (): Promise<GranjaDTOModel[]> => {
-    const path = `${import.meta.env.VITE_API_BASE_URL_GRANJAS}${
+    /*const path = `${import.meta.env.VITE_API_BASE_URL_GRANJAS}${
       import.meta.env.VITE_API_ENDPOINT_GRANJASSA
-    }`;
+    }`;*/
   
     try {
       const response = await axios.get(path);
