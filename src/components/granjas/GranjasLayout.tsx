@@ -28,9 +28,10 @@ const tabs: GranjasStatusText[] = [
 
 interface GranjasProps {
   path: string;
+  title: string;
 }
 
-const GranjasLayout: React.FC<GranjasProps> = ({ path }) => {
+const GranjasLayout: React.FC<GranjasProps> = ({ path, title }) => {
   const [showConfirm, setShowConfirm] = useState(false);
   const [confirmMessage, setConfirmMessage] = useState("");
   const [confirmAction, setConfirmAction] = useState<() => void>(() => {});
@@ -84,9 +85,7 @@ const GranjasLayout: React.FC<GranjasProps> = ({ path }) => {
 
   return (
     <div className="container mx-auto p-4">
-      <h1 className="text-3xl font-bold mb-6 text-[#00693c]">
-        Granjas SA Producción
-      </h1>
+      <h1 className="text-3xl font-bold mb-6 text-[#00693c]">{title}</h1>
       <Tabs
         selectedIndex={tabs.indexOf(activeTab)}
         onSelect={(index: number) => {
