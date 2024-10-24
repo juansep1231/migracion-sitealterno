@@ -4,7 +4,7 @@ import {
   GranjasStatusText,
 } from "../../types/granjasTypes/granjasSA";
 import { Tab, TabList, TabPanel, Tabs } from "react-tabs";
-import ServicesTabContent from "./GranjasTabContent";
+import GranjasTabContent from "./GranjasTabContent";
 import ConfirmPopup from "../general/ConfirmPopup";
 import { useGranjas } from "../../hooks/granjas/useGranjas";
 
@@ -107,7 +107,7 @@ const GranjasLayout: React.FC<GranjasProps> = ({ path, title }) => {
         {/* Generar los TabPanel dinámicamente */}
         {tabs.map((tab, index) => (
           <TabPanel key={index}>
-            <ServicesTabContent
+            <GranjasTabContent
               services={servers}
               activeTab={tab}
               onStartAll={handleStartAll}
