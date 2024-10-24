@@ -7,9 +7,8 @@ import {
 import LoadingProdubanco from "../general/Loader";
 import { ChevronLeft, ChevronRight, Search } from "lucide-react";
 import ControlButtons from "../general/ControlButtons";
-import ConfirmPopup from "../general/ConfirmPopup";
 
-interface ServicesTabContentProps {
+interface GranjasTabContentProps {
   services: GranjaDTOModel[];
   activeTab: GranjasStatusText;
   onStartAll: () => void;
@@ -18,7 +17,7 @@ interface ServicesTabContentProps {
   onStopSingle: (code: string) => void;
 }
 
-const ServicesTabContent: React.FC<ServicesTabContentProps> = ({
+const GranjasTabContent: React.FC<GranjasTabContentProps> = ({
   services,
   activeTab,
   onStartAll,
@@ -177,4 +176,4 @@ const ServicesTabContent: React.FC<ServicesTabContentProps> = ({
   );
 };
 
-export default ServicesTabContent;
+export default GranjasTabContent;
