@@ -1,8 +1,8 @@
 import { Layout } from "../components/general/Layout";
 import ServiciosEvolutionSA from "../pages/ServiciosEvolutionSA";
 import ServiciosEvolutionSP from "../pages/ServiciosEvolutionSP";
-import ServiciosSA from "../pages/ServiciosSA";
-import ServiciosSP from "../pages/ServiciosSP";
+import ServiciosSA from "../pages/ServicioSA";
+import ServiciosSP from "../pages/ServicioSP";
 
 export const serviciosRoutes = [
   {

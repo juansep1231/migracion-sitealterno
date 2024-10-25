@@ -20,11 +20,7 @@ const NavBar: React.FC = () => {
   const toggleSection = (section: "main" | "servers") => {
     setExpandedSection(expandedSection === section ? null : section);
   };
-  const [selected, setSelected] = useState(false);
-
-  const handleLinkClick = () => {
-    setSelected(true); // Cambia el estado a seleccionado cuando se haga clic
-  };
+  
   return (
     <div className="w-64 bg-white fixed  flex flex-col h-screen text-[#00693c] shadow-[4px_0_10px_rgba(0,0,0,0.2)]">
       <div className="p-4 flex items-center gap-3">
