@@ -1,19 +1,11 @@
 import { Server, BarChart, Search, AlertTriangle } from "lucide-react";
 import { useState, useEffect } from "react";
+import { ServicioDTOModel } from "../../types/serviciosTypes/serviciosSA";
 
-
-
-interface Servidor {
-  servidor: string; 
-    servicios: { 
-      name: string; 
-      status: number; 
-    }[];
-}
 
 interface TIndexServiciosSAProps {
   activeCount: number;
-  data: Servidor[];
+  data: ServicioDTOModel[];
   searchTerm: string;
   setSearchTerm: (term: string) => void;
 }
@@ -24,7 +16,7 @@ const IndexServiciosSA: React.FC<TIndexServiciosSAProps> = ({
   searchTerm,
   setSearchTerm,
 }) => {
-  const [inactiveServices, setInactiveServices] = useState<Servidor[]>([]);
+  const [inactiveServices, setInactiveServices] = useState<ServicioDTOModel[]>(data);
 
   useEffect(() => {
     const updatedInactiveServices = data.filter((servidor) =>

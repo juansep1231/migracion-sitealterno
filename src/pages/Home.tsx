@@ -1,5 +1,4 @@
 import { Server, Activity, BarChart } from "lucide-react"
-import Logo from "../assets/LogoCompleto.png"
 const Home: React.FC = () => {
   return (
     <div className="container mx-auto flex flex-col w-full h-full rounded-2xl bg-gray-300 items-center justify-center text-black ">
