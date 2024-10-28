@@ -7,7 +7,11 @@ interface ControlButtonsProps {
   hideStopAll?: boolean; // Propiedad opcional para ocultar el botón Detener Todos
 }
 
-const ControlButtons: React.FC<ControlButtonsProps> = ({ onStartAll, onStopAll, hideStopAll }) => {
+const ControlButtons: React.FC<ControlButtonsProps> = ({
+  onStartAll,
+  onStopAll,
+  hideStopAll,
+}) => {
   return (
     <div className="flex flex-wrap gap-2">
       <button
