@@ -3,6 +3,7 @@ import { HubConnection, HubConnectionBuilder } from "@microsoft/signalr";
 import { GranjaCodeOnly, GranjaDTOModel, GranjaStatusOnly } from "../../types/granjasTypes/granjasSA";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { ResponseModel } from "../../types/general/generalTypes";
 
 
 
@@ -47,7 +48,7 @@ export const useGranjas = (path:string) => {
       const clusters:GranjaCodeOnly[] = [{code}];
 
 
-      const response = await axios.post(
+      const response = await axios.post<ResponseModel>(
         `${path}?command=${actionCommand}&command2=global`,
         clusters
       );
@@ -63,11 +64,8 @@ export const useGranjas = (path:string) => {
         error.response?.data?.message ||
         error.message ||
         "Error al iniciar los clusters";
-      toast.error(errorMessage);
-
-      servers.forEach((server) => {
-        changeClusterStateReload(server.code, "5");
-      });
+        toast.error(errorMessage);
+        changeClusterStateReload(code, "5");
     }
   };
 
@@ -84,7 +82,7 @@ export const useGranjas = (path:string) => {
       });
 
 
-      const response = await axios.post(
+      const response = await axios.post<ResponseModel>(
         `${path}?command=${actionCommand}&command2=global`,
         clusters
       );
@@ -140,7 +138,7 @@ console.log("ejecutandogetnlbstatus")
         return { code: serverCode }; 
       });
       console.log("clusters",clusters);
-      const response = await axios.post(`${path}?command=global`, clusters);
+      const response = await axios.post<ResponseModel>(`${path}?command=global`, clusters);
 
 
       console.log("mensajeeeee",response.data.message);
