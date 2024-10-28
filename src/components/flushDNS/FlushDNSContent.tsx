@@ -1,43 +1,29 @@
 import { useMemo, useState } from "react";
-import { getStatusHelper } from "../../helpers/granjas/getStatusHelper";
-import {
-  GranjaDTOModel,
-  GranjasStatusText,
-} from "../../types/granjasTypes/granjasSA";
 import LoadingProdubanco from "../general/Loader";
 import { ChevronLeft, ChevronRight, Search } from "lucide-react";
-import ControlButtons from "../general/ControlButtons";
+import { FlushDNSDTOModel } from "../../types/flushdns/flushdns";
+import ControlButtonsFlushDNS from "./ControlButtonsFlushDNS";
 
-interface GranjasTabContentProps {
-  services: GranjaDTOModel[];
-  activeTab: GranjasStatusText;
-  onStartAll: () => void;
-  onStopAll: () => void;
-  onStartSingle: (code: string) => void;
-  onStopSingle: (code: string) => void;
+interface FlushDNSContentProps {
+  services: FlushDNSDTOModel[];
+  onExecuteAll: () => void;
+  onExecuteSingle: (code: string) => void;
 }
 
-const GranjasTabContent: React.FC<GranjasTabContentProps> = ({
+const FlushDNSContent: React.FC<FlushDNSContentProps> = ({
   services,
-  activeTab,
-  onStartAll,
-  onStopAll,
-  onStartSingle,
-  onStopSingle,
+  onExecuteAll,
+  onExecuteSingle,
 }) => {
   const [filter, setFilter] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(12);
 
   const filteredServices = useMemo(() => {
-    return services.filter(
-      (service) =>
-        (activeTab === "Todos" ||
-          getStatusHelper(service.status) === activeTab) &&
-        (service.name.toLowerCase().includes(filter.toLowerCase()) ||
-          service.code.toLowerCase().includes(filter.toLowerCase()))
+    return services.filter((service) =>
+      service.name.toLowerCase().includes(filter.toLowerCase())
     );
-  }, [services, filter, activeTab]);
+  }, [services, filter]);
 
   const totalPages = Math.ceil(filteredServices.length / itemsPerPage);
   const paginatedServices = filteredServices.slice(
@@ -45,34 +31,12 @@ const GranjasTabContent: React.FC<GranjasTabContentProps> = ({
     currentPage * itemsPerPage
   );
 
-  const getStatusBadge = (status: GranjaDTOModel["status"]) => {
+  const getStatusBadge = (status: FlushDNSDTOModel["status"]) => {
     switch (status) {
-      case 0:
-        return (
-          <span className="px-2 py-1 text-sm font-semibold text-white bg-[#EE0000] rounded">
-            Offline
-          </span>
-        );
       case 1:
-        return (
-          <span className="px-2 py-1 text-sm font-semibold text-white bg-[#FFBB56] rounded">
-            Alguno Offline
-          </span>
-        );
-      case 2:
-        return (
-          <span className="px-2 py-1 text-sm text-right font-semibold text-white bg-green-400 rounded">
-            Activo
-          </span>
-        );
-      case 5:
-        return (
-          <span className="px-2 py-1 text-sm font-semibold text-white bg-[#8B8B8B] rounded">
-            Indeterminado
-          </span>
-        );
-      default:
         return <LoadingProdubanco />;
+      default:
+        return <span className="hidden"></span>;
     }
   };
 
@@ -93,38 +57,40 @@ const GranjasTabContent: React.FC<GranjasTabContentProps> = ({
           />
         </div>
         {/* Botones de Control */}
-        <ControlButtons onStartAll={onStartAll} onStopAll={onStopAll} />
+        <ControlButtonsFlushDNS onFlushAll={onExecuteAll} />
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-        {paginatedServices.map((service) => (
+        {paginatedServices.map((server) => (
           <div
-            key={service.name}
+            key={server.name}
             className="flex flex-col p-4 border border-gray-200 rounded-md shadow-sm bg-white"
           >
             <div className="flex justify-between items-start mb-4">
               <span
                 className="text-lg font-semibold truncate"
-                title={service.name}
+                title={server.name}
               >
-                {service.name}
+                {server.name}
               </span>
             </div>
-            <p className="text-sm text-gray-500 mb-4">{service.code}</p>
+
             <div className="mt-auto flex items-center justify-end">
               <button
-                className="px-4 py-2 border border-gray-300 rounded hover:bg-gray-100"
-                onClick={
-                  service.status !== 0
-                    ? () => onStartSingle(service.code)
-                    : () => onStopSingle(service.code)
-                }
+                className={`px-4 py-2 border border-gray-300 rounded ${
+                  server.status !== 0
+                    ? "bg-gray-200 cursor-not-allowed"
+                    : "hover:bg-gray-100"
+                }`}
+                onClick={() => onExecuteSingle(server.name)}
+                disabled={server.status !== 0}
               >
-                {service.status !== 0 ? "Start" : "Stop"}
+                {server.status !== 0 ? "Ejecutando" : "Start"}
               </button>
               <div className="w-full flex justify-end">
-                {getStatusBadge(service.status)}
+                {getStatusBadge(server.status)}
               </div>
+              <div className="w-full flex justify-start">{server.message}</div>
             </div>
           </div>
         ))}
@@ -176,4 +142,4 @@ const GranjasTabContent: React.FC<GranjasTabContentProps> = ({
   );
 };
 
-export default GranjasTabContent;
+export default FlushDNSContent;
