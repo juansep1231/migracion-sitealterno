@@ -17,26 +17,19 @@ const generateMockServices = (count: number): GranjaDTOModel[] => {
     ] as GranjaDTOModel["status"],
   }));
 };
-const tabs: GranjasStatusText[] = [
-  "Todos",
-  "Activos",
-  "Offline",
-  "Alguno Offline",
-  "Indeterminado",
-];
 
 const FlushDNSLayout: React.FC = () => {
   const [showConfirm, setShowConfirm] = useState(false);
   const [confirmMessage, setConfirmMessage] = useState("");
   const [confirmAction, setConfirmAction] = useState<() => void>(() => {});
   //const allServices = useMemo(() => generateMockServices(100), []);
-  const { servers, handleAllClustersAction, handleExecuteFlushDNS } =
+  const { servers, handleGeneralFlushDNS, handleExecuteFlushDNS } =
     useFlushDNS();
   //const [services, setServices] = useState<GranjaDTOModel[]>(allServices);
 
-  const executeActionForAll = async (action: string) => {
+  const executeGeneralAction = async () => {
     setShowConfirm(false);
-    await handleAllClustersAction(action); // Call the function from the hook
+    await handleGeneralFlushDNS(); // Call the function from the hook
   };
 
   const executeSingleAction = async (serverName: string) => {
@@ -53,9 +46,8 @@ const FlushDNSLayout: React.FC = () => {
 
   //functions for all
   const handleStartAll = () => {
-    const action: string = "start";
-    setConfirmMessage("¿Desea iniciar todas las granjas?");
-    setConfirmAction(() => () => executeActionForAll(action));
+    setConfirmMessage("Ejecutar Flush DNS en todos los servidores?");
+    setConfirmAction(() => () => executeGeneralAction());
     setShowConfirm(true);
   };
 
