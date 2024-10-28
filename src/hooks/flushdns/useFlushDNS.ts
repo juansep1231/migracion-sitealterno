@@ -47,7 +47,7 @@ export const useFlushDNS = () => {
       const errorMessage =
         error.response?.data?.message ||
         error.message ||
-        "Error al iniciar los clusters";
+        "Error al ejecutar el flush dns";
       toast.error(errorMessage);  
       changeClusterStateReload(serverName, error.message);
     }
@@ -55,38 +55,43 @@ export const useFlushDNS = () => {
 
 
   //Function to handle all clusters action based on a command (start or stop)
-  const handleAllClustersAction = async (actionCommand:string) => {
+  const handleGeneralFlushDNS = async () => {
     try {
-      const path = `${import.meta.env.VITE_API_BASE_URL_ADMINISTRACION}${import.meta.env.VITE_API_ENDPOINT_REMOTE_EXECUTE_NLB_ACTION}`;
+      const path = `${import.meta.env.VITE_API_BASE_URL_ADMINISTRACION}${import.meta.env.VITE_API_ENDPOINT_REMOTE_EXECUTE_FLUSH_DNS}`;
 
 
-      const clusters = servers.map((server) => {
-        changeClusterStateReload(server.name, "3");
-        return { code: server.name };
-      });
+      // Prepare the data to send in the POST request
+      const serversData = servers.map((server) => ({
+        ...server,
+        message: '',
+      }));
 
-
-      const response = await axios.post(
-        `${path}?command=${actionCommand}&command2=global`,
-        clusters
+      // Update the servers state: set status to 1 and message to '' for all servers
+      setServers((prevServers) =>
+        prevServers.map((server) => ({
+          ...server,
+          status: 1,
+          message: '',
+        }))
       );
 
+      const response = await axios.post<ResponseModel>(path, serversData);
+
       console.log("mensajeee",response.data.message);
-      if (response.data.message.includes("error")) {
-        const errorMessage = actionCommand === "start" ? "Error al iniciar los clusters" : "Error al detener los clusters";
-        throw new Error(errorMessage);
-      }
     } catch (error: any) {
 
       const errorMessage =
         error.response?.data?.message ||
         error.message ||
-        "Error al iniciar los clusters";
+        "Error al ejecutar el flush dns general";
       toast.error(errorMessage);
-
-      servers.forEach((server) => {
-        changeClusterStateReload(server.name, "5");
-      });
+      setServers((prevServers) =>
+        prevServers.map((server) => ({
+          ...server,
+          status: 0,
+          message: error.message,
+        }))
+      );
     }
   };
 
@@ -137,14 +142,14 @@ export const useFlushDNS = () => {
   }, []);
 
   useEffect(() => {
-    const hubpath = `${import.meta.env.VITE_API_BASE_URL_ADMINISTRACIONHUB}`;
+    const hubpath = `${import.meta.env.VITE_API_BASE_URL_ADMINISTRACIONFLUSHDNSHUB}`;
   
     const connection = new HubConnectionBuilder()
       .withUrl(hubpath)
       .withAutomaticReconnect()
       .build();
   
-    connection.on("ReceiveStatus", (cluster: string, message: string) => {
+    connection.on("ReceiveFlushDNSStatus", (cluster: string, message: string) => {
       const encodedMsg = `${cluster}: ${message}`;
       const splittedMessage = message.split("\n").length;
       console.log("splitted",splittedMessage);
@@ -171,5 +176,5 @@ export const useFlushDNS = () => {
     };
   }, []);
 
-  return { servers, count, loading, handleAllClustersAction, handleExecuteFlushDNS };
+  return { servers, count, loading, handleGeneralFlushDNS, handleExecuteFlushDNS };
 };

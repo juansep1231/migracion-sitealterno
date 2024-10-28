@@ -1,7 +1,6 @@
 import { useMemo, useState } from "react";
 import LoadingProdubanco from "../general/Loader";
 import { ChevronLeft, ChevronRight, Search } from "lucide-react";
-import ControlButtons from "../general/ControlButtons";
 import { FlushDNSDTOModel } from "../../types/flushdns/flushdns";
 import ControlButtonsFlushDNS from "./ControlButtonsFlushDNS";
 
@@ -62,34 +61,36 @@ const FlushDNSContent: React.FC<FlushDNSContentProps> = ({
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-        {paginatedServices.map((service) => (
+        {paginatedServices.map((server) => (
           <div
-            key={service.name}
+            key={server.name}
             className="flex flex-col p-4 border border-gray-200 rounded-md shadow-sm bg-white"
           >
             <div className="flex justify-between items-start mb-4">
               <span
                 className="text-lg font-semibold truncate"
-                title={service.name}
+                title={server.name}
               >
-                {service.name}
+                {server.name}
               </span>
             </div>
-            <p className="text-sm text-gray-500 mb-4">{service.name}</p>
+
             <div className="mt-auto flex items-center justify-end">
               <button
-                className="px-4 py-2 border border-gray-300 rounded hover:bg-gray-100"
-                onClick={
-                  service.status !== 0
-                    ? () => onStartSingle(service.name)
-                    : () => onStopSingle(service.name)
-                }
+                className={`px-4 py-2 border border-gray-300 rounded ${
+                  server.status !== 0
+                    ? "bg-gray-200 cursor-not-allowed"
+                    : "hover:bg-gray-100"
+                }`}
+                onClick={() => onExecuteSingle(server.name)}
+                disabled={server.status !== 0}
               >
-                {service.status !== 0 ? "Start" : "Stop"}
+                {server.status !== 0 ? "Ejecutando" : "Start"}
               </button>
               <div className="w-full flex justify-end">
-                {getStatusBadge(service.status)}
+                {getStatusBadge(server.status)}
               </div>
+              <div className="w-full flex justify-start">{server.message}</div>
             </div>
           </div>
         ))}
