@@ -18,13 +18,17 @@ const generateMockServices = (count: number): GranjaDTOModel[] => {
   }));
 };
 
-const FlushDNSLayout: React.FC = () => {
+interface FlushDNSLayoutProps {
+  loadServerspath: string;
+}
+
+const FlushDNSLayout: React.FC<FlushDNSLayoutProps> = ({ loadServerspath }) => {
   const [showConfirm, setShowConfirm] = useState(false);
   const [confirmMessage, setConfirmMessage] = useState("");
   const [confirmAction, setConfirmAction] = useState<() => void>(() => {});
   //const allServices = useMemo(() => generateMockServices(100), []);
   const { servers, handleGeneralFlushDNS, handleExecuteFlushDNS } =
-    useFlushDNS();
+    useFlushDNS(loadServerspath);
   //const [services, setServices] = useState<GranjaDTOModel[]>(allServices);
 
   const executeGeneralAction = async () => {

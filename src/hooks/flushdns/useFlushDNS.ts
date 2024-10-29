@@ -5,7 +5,7 @@ import { toast } from "react-toastify";
 import { FlushDNSDTOModel, FlushDNSStatusOnly } from "../../types/flushdns/flushdns";
 import { ResponseModel } from "../../types/general/generalTypes";
 
-export const useFlushDNS = () => {
+export const useFlushDNS = (loadServerspath:string) => {
   const [servers, setServers] = useState<FlushDNSDTOModel[]>([]);
   const [count, setCount] = useState(0);
   const [loading, setLoading] = useState(false);
@@ -97,11 +97,9 @@ export const useFlushDNS = () => {
 
 
   const loadServersAsync = async (): Promise<FlushDNSDTOModel[]> => {
-    const path = `${import.meta.env.VITE_API_BASE_URL_GRANJAS}${
-      import.meta.env.VITE_API_ENDPOINT_FLUSHDNS
-    }`;
+   
     try {
-      const response = await axios.get(path);
+      const response = await axios.get(loadServerspath);
       return response.data;
     } catch (error: any) {
       if (error.response) {
