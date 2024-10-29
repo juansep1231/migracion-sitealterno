@@ -31,14 +31,6 @@ export const granjasRoutes = [
     ),
   },
   {
-    path: "/flushdns",
-    element: (
-      <Layout>
-        <FlushDNS />
-      </Layout>
-    ),
-  },
-  {
     path: "/granjassp",
     element: (
       <Layout>
