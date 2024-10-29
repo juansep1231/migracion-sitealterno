@@ -20,30 +20,28 @@ const NavBar: React.FC = () => {
   const toggleSection = (section: "main" | "servers") => {
     setExpandedSection(expandedSection === section ? null : section);
   };
-  
+
   return (
     <div className="w-64 bg-white fixed  flex flex-col h-screen text-[#00693c] shadow-[4px_0_10px_rgba(0,0,0,0.2)]">
       <div className="p-4 flex items-center gap-3">
-        <p><img
-    src={Logo}
-    alt="Company Logo"
-    className="w-24 h-20 object-contain"
-  /></p>
+        <p>
+          <img
+            src={Logo}
+            alt="Company Logo"
+            className="w-24 h-20 object-contain"
+          />
+        </p>
         <h1 className="text-xl font-bold">Robots Granjas Producción</h1>
       </div>
       <nav className="flex-1 overflow-y-auto">
         <ul className="space-y-2 p-2 ">
-        <li className="mb-4">
-        <Link to={"/"}>
-  <button
-    className="flex w-full font-medium items-center text-lg justify-between rounded-lg px-4 py-2 text-left text-black hover:bg-[#00693c] hover:text-white focus:outline-none focus:text-white focus:bg-[#00693c]"
-  >
-    Home
-  </button>
-</Link>
-
-      
-    </li>
+          <li className="mb-4">
+            <Link to={"/"}>
+              <button className="flex w-full font-medium items-center text-lg justify-between rounded-lg px-4 py-2 text-left text-black hover:bg-[#00693c] hover:text-white focus:outline-none focus:text-white focus:bg-[#00693c]">
+                Home
+              </button>
+            </Link>
+          </li>
           <SidebarSection
             title="Granjas, Servicios y Otros"
             isExpanded={expandedSection === "main"}
@@ -54,8 +52,7 @@ const NavBar: React.FC = () => {
                 Granjas
               </h2>
               <ul className="space-y-1">
-              
-                <Link to={"/granjassp"} >
+                <Link to={"/granjassp"}>
                   <SidebarItem icon={<Home size={18} />} label="GranjasSP" />
                 </Link>
                 <Link to={"/granjassa"}>
@@ -115,12 +112,12 @@ const NavBar: React.FC = () => {
                     label="FlushDNS"
                   />
                 </Link>
-                
+
                 <Link to={"/f5produnet"}>
                   {" "}
                   <SidebarItem icon={<Cpu size={18} />} label="F5 Produnet" />
                 </Link>
-                <Link to={"/evolutionflusdns"}>
+                <Link to={"/evolutionflushdns"}>
                   <SidebarItem
                     icon={<Database size={18} />}
                     label="EvolutionFlushDNS"
@@ -179,7 +176,6 @@ function SidebarItem({
   icon: React.ReactNode;
   label: string;
 }) {
-  
   return (
     <li>
       <a
