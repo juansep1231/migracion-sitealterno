@@ -24,6 +24,15 @@
   animation: spin 2s linear infinite;
 }
 
+.diamond {
+  width: 0;
+  height: 0;
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  border-bottom: 20px solid transparent; /* Color del rombo */
+  transform: rotate(45deg); /* Girar el rombo */
+}
+
 .logoPro {
   position: absolute;
 

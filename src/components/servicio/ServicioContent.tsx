@@ -83,7 +83,7 @@ const TablaServicios: React.FC<TablaServiciosProps> = ({
                             : servicio.status === 0
                             ? "bg-red-400 shadow-inner shadow-red-600"
                             : servicio.status === 5
-                            ? "bg-gray-400 shadow-inner shadow-gray-600"
+                            ? "bg-gray-400 shadow-inner  shadow-gray-600"
                             : ""
                         }`}
                       ></div>
