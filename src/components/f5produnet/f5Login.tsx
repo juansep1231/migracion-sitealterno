@@ -22,7 +22,7 @@ const f5Login: React.FC<ContentF5Props> = ({ onhandleSubmit, onisLoading }) => {
       >
         <div className="w-[400px] h-[300px] rounded-3xl p-4 overflow-hidden bg-white shadow-2xl">
           <div className="space-y-3">
-            <div className="text-2xl font-bold text-center">F5 PoduNet</div>
+            <div className="text-2xl font-bold text-center">F5 PodruNet</div>
             <div className="text-center">
               Ingrese sus credenciales para acceder
             </div>
