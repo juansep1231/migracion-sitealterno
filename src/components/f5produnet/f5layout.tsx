@@ -29,16 +29,7 @@ const TablaF5ProduNet: React.FC<TablaF5ProduNetProps> = ({
 }) => {
   const location =
     Titulo === "Guayaquil" ? "GYE" : Titulo === "Quito" ? "UIO" : "";
-  const getStatusClass = (session: string, state: string) => {
-    if (session === "monitor-enabled" && state === "up") {
-      return "py-3 px-3 mr-2 bg-green-400 shadow-inner shadow-green-600";
-    } else if (session === "user-disabled" && state === "up") {
-      return "py-3 px-3 mr-2 bg-gray-400 shadow-inner shadow-gray-600";
-    } else if (session === "user-disabled" && state === "user-down") {
-      return "bg-green-400 diamond shadow-inner shadow-green-600";
-    }
-    return ""; // Retorna una cadena vacía si no se cumplen condiciones
-  };
+ 
 
   return (
     <div className="p-8 bg-white rounded-lg border border-gray-200 shadow-2xl">
@@ -100,7 +91,7 @@ const TablaF5ProduNet: React.FC<TablaF5ProduNetProps> = ({
                             : item.session === "user-disabled" &&
                               item.state === "user-down"
                             ? "bg-gray-400 shadow-inner dimond shadow-gray-600 rotate-[45deg]"
-                            : ""
+                            : "bg-gray-400 shadow-inner dimond shadow-gray-600 rotate-[45deg]"
                         }`}
                       ></div>
                     </div>

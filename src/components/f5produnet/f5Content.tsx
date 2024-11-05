@@ -7,7 +7,7 @@ import { div } from "framer-motion/client";
 import { F5ProduNetDTOModel } from "../../types/f5produnetTypes/f5produnet";
 
 interface ServiciosProps {
-  ubicacion: string;
+  ubicacion: string[];
 }
 
 const F5Content: React.FC<ServiciosProps> = ({ ubicacion }) => {
@@ -54,7 +54,7 @@ const F5Content: React.FC<ServiciosProps> = ({ ubicacion }) => {
 
   const handleForceOfflineAll = () => {
     const actionCommand: string = "disabled";
-    const UserCommand: string = "up";
+    const UserCommand: string = "down";
     setConfirmMessage("¿Desea Forzar la desconexión de todos los nodos?");
     setConfirmAction(
       () => () => executeActionForAll(actionCommand, UserCommand)
@@ -129,38 +129,31 @@ const F5Content: React.FC<ServiciosProps> = ({ ubicacion }) => {
     setIsLoggedIn(true);
     setIsLoading(false);
   };
-
+  const layouts = [
+    { Titulo: ubicacion[0], Servidor: nodesUIO },
+    { Titulo: ubicacion[1], Servidor: nodesGYE },
+  ];
   return (
     <>
       {!isLoggedIn ? (
         <F5Login onhandleSubmit={handleSubmit} onisLoading={isLoading} />
       ) : (
         <div className="">
-          <div className="text-3xl font-bold mb-4">
-            F5 ProduNet
-           
-          </div>
+          <div className="text-3xl font-bold mb-4">F5 ProduNet</div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4">
-          <F5Layout
-              Titulo="Quito"
-              Servidor={nodesUIO}
-              onStartSingle={handleStartSingleAction}
-              onStopSingle={handleStopSingleAction}
-              onForceOfflineSingle={handleForceOfflineSingleAction}
-              onStartAll={handleEnabledtAll}
-              onStopAll={handleDisabledAll}
-              onForceOfflineAllAll={handleForceOfflineAll}
-            />
-            <F5Layout
-              Titulo="Guayaquil"
-              Servidor={nodesGYE}
-              onStartSingle={handleStartSingleAction}
-              onStopSingle={handleStopSingleAction}
-              onForceOfflineSingle={handleForceOfflineSingleAction}
-              onStartAll={handleEnabledtAll}
-              onStopAll={handleDisabledAll}
-              onForceOfflineAllAll={handleForceOfflineAll}
-            />
+            {layouts.map((layout, index) => (
+              <F5Layout
+                key={index}
+                Titulo={layout.Titulo}
+                Servidor={layout.Servidor}
+                onStartSingle={handleStartSingleAction}
+                onStopSingle={handleStopSingleAction}
+                onForceOfflineSingle={handleForceOfflineSingleAction}
+                onStartAll={handleEnabledtAll}
+                onStopAll={handleDisabledAll}
+                onForceOfflineAllAll={handleForceOfflineAll}
+              />
+            ))}
           </div>
         </div>
       )}
