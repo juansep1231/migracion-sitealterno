@@ -2,7 +2,6 @@ import { Server, BarChart, Search, AlertTriangle } from "lucide-react";
 import { useState, useEffect } from "react";
 import { ServicioDTOModel } from "../../types/serviciosTypes/serviciosSA";
 
-
 interface TIndexServiciosSAProps {
   activeCount: number;
   data: ServicioDTOModel[];
@@ -16,9 +15,10 @@ const IndexServiciosSA: React.FC<TIndexServiciosSAProps> = ({
   searchTerm,
   setSearchTerm,
 }) => {
-  const [inactiveServices, setInactiveServices] = useState<ServicioDTOModel[]>(data);
+  const [inactiveServices, setInactiveServices] =
+    useState<ServicioDTOModel[]>(data);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [selectedServer, setSelectedServer] = useState<string>('');
+  const [selectedServer, setSelectedServer] = useState<string>("");
 
   useEffect(() => {
     const updatedInactiveServices = data.filter((servidor) =>
@@ -51,25 +51,34 @@ const IndexServiciosSA: React.FC<TIndexServiciosSAProps> = ({
             type="text"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            onFocus={() => setIsDropdownOpen(true)} 
-            onBlur={() => setTimeout(() => setIsDropdownOpen(false), 100)} 
+            onClick={() => setIsDropdownOpen(true)}
+            onBlur={() => setTimeout(() => setIsDropdownOpen(false), 100)}
             placeholder="Nombre del Servidor..."
             className="p-2 pl-10 border-2 w-full h-14 rounded-xl mt-2"
           />
           {/* Dropdown de servidores */}
-          {isDropdownOpen && (
-            <div className="absolute z-10 mt-1 w-full bg-white border border-gray-200 rounded-xl p-4 shadow-lg" style={{ maxHeight: '500px', overflowY: 'auto', }}>
-              {filteredServers.map((servidor) => (
-                <div
-                  key={servidor.servidor}
-                  onClick={() => handleServerSelect(servidor.servidor)}
-                  className="p-4 w-full hover:bg-gray-200 cursor-pointer text-base font-semibold rounded-xl "
-                >
-                  {servidor.servidor}
+          {isDropdownOpen ? (
+            <div
+              className="absolute z-10 mt-1 w-full bg-white border border-gray-200 rounded-xl p-4 shadow-lg"
+              style={{ maxHeight: "500px", overflowY: "auto" }}
+            >
+              {filteredServers.length > 0 ? (
+                filteredServers.map((servidor) => (
+                  <div
+                    key={servidor.servidor}
+                    onMouseDown={() => handleServerSelect(servidor.servidor)}
+                    className="p-4 hover:bg-gray-200 cursor-pointer text-base font-semibold rounded-xl"
+                  >
+                    {servidor.servidor}
+                  </div>
+                ))
+              ) : (
+                <div className="p-4 text-gray-500">
+                  No se encontraron resultados
                 </div>
-              ))}
+              )}
             </div>
-          )}
+          ) : null}
         </div>
       </div>
 
