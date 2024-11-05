@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Home,
   Plus,
@@ -10,12 +10,16 @@ import {
   ChevronRight,
 } from "lucide-react";
 import { Link } from "react-router-dom";
-import F5Produnet from "../../pages/F5Produnet";
 import Logo from "../../assets/startPro.png";
 const NavBar: React.FC = () => {
+  const [pageTitle, setPageTitle] = useState('Robots Granjas Producción');
   const [expandedSection, setExpandedSection] = useState<
     "main" | "servers" | null
   >("main");
+
+  useEffect(() => {
+    document.title = pageTitle;
+  }, [pageTitle]);
 
   const toggleSection = (section: "main" | "servers") => {
     setExpandedSection(expandedSection === section ? null : section);
@@ -36,7 +40,7 @@ const NavBar: React.FC = () => {
       <nav className="flex-1 overflow-y-auto">
         <ul className="space-y-2 p-2 ">
           <li className="mb-4">
-            <Link to={"/"}>
+            <Link to={"/"}  onClick={() => setPageTitle("Robots Granjas Producción")}>
               <button className="flex w-full font-medium items-center text-lg justify-between rounded-lg px-4 py-2 text-left text-black hover:bg-[#00693c] hover:text-white focus:outline-none focus:text-white focus:bg-[#00693c]">
                 Home
               </button>
@@ -52,19 +56,19 @@ const NavBar: React.FC = () => {
                 Granjas
               </h2>
               <ul className="space-y-1">
-                <Link to={"/granjassp"}>
+                <Link to={"/granjassp"}  onClick={() => setPageTitle("Granjas SP")}>
                   <SidebarItem icon={<Home size={18} />} label="GranjasSP" />
                 </Link>
-                <Link to={"/granjassa"}>
+                <Link to={"/granjassa"} onClick={() => setPageTitle("Granjas SA")} >
                   <SidebarItem icon={<Home size={18} />} label="GranjasSA" />
                 </Link>
-                <Link to={"/granjasevolutionsp"}>
+                <Link to={"/granjasevolutionsp"} onClick={() => setPageTitle("Granjas Evolution SP")}>
                   <SidebarItem
                     icon={<Home size={18} />}
                     label="GranjasEvolutionSP"
                   />
                 </Link>
-                <Link to={"/granjasevolutionsa"}>
+                <Link to={"/granjasevolutionsa"} onClick={() => setPageTitle("Granjas Evolution SA")}>
                   <SidebarItem
                     icon={<Home size={18} />}
                     label="GranjasEvolutionSA"
@@ -77,21 +81,21 @@ const NavBar: React.FC = () => {
                 Servicios
               </h2>
               <ul className="space-y-1">
-                <Link to={"/serviciossp"}>
+                <Link to={"/serviciossp"} onClick={() => setPageTitle("Servicios SP")}>
                   <SidebarItem icon={<Plus size={18} />} label="ServiciosSP" />
                 </Link>
-                <Link to={"/serviciossa"}>
+                <Link to={"/serviciossa"} onClick={() => setPageTitle("Servicios SA")}>
                   {" "}
                   <SidebarItem icon={<Plus size={18} />} label="ServiciosSA" />
                 </Link>
-                <Link to={"/serviciosevolutionsp"}>
+                <Link to={"/serviciosevolutionsp"} onClick={() => setPageTitle("Servicios Evolution SP")}>
                   {" "}
                   <SidebarItem
                     icon={<Plus size={18} />}
                     label="ServiciosEvolutionSP"
                   />
                 </Link>
-                <Link to={"/serviciosevolutionsa"}>
+                <Link to={"/serviciosevolutionsa"} onClick={() => setPageTitle("Servicios Evolution SA")} >
                   {" "}
                   <SidebarItem
                     icon={<Plus size={18} />}
@@ -105,7 +109,7 @@ const NavBar: React.FC = () => {
                 Otros
               </h2>
               <ul className="space-y-1">
-                <Link to={"/flushdns"}>
+                <Link to={"/flushdns"} onClick={() => setPageTitle("FlushDNS")}>
                   {" "}
                   <SidebarItem
                     icon={<RefreshCw size={18} />}
@@ -113,11 +117,11 @@ const NavBar: React.FC = () => {
                   />
                 </Link>
 
-                <Link to={"/f5produnet"}>
+                <Link to={"/f5produnet"} onClick={() => setPageTitle("F5 ProduNet")}>
                   {" "}
                   <SidebarItem icon={<Cpu size={18} />} label="F5 Produnet" />
                 </Link>
-                <Link to={"/evolutionflushdns"}>
+                <Link to={"/evolutionflushdns"} onClick={() => setPageTitle("FlushDNS Evolution")}>
                   <SidebarItem
                     icon={<Database size={18} />}
                     label="EvolutionFlushDNS"

@@ -28,6 +28,7 @@ const GranjasTabContent: React.FC<GranjasTabContentProps> = ({
   const [filter, setFilter] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(12);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   const filteredServices = useMemo(() => {
     return services.filter(
@@ -75,22 +76,57 @@ const GranjasTabContent: React.FC<GranjasTabContentProps> = ({
         return <LoadingProdubanco />;
     }
   };
-
+  const handleServerSelect = (server: string) => {
+    setFilter(server);
+    setIsDropdownOpen(false);
+  };
   return (
     <div className="mb-6">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
-        <div className="flex items-center w-full sm:w-auto">
+        <div className="flex  items-center w-full sm:w-auto">
           <Search className="w-4 h-4 mr-2 text-gray-500" />
-          <input
-            type="text"
-            placeholder="Buscar servicios..."
-            value={filter}
-            onChange={(e) => {
-              setFilter(e.target.value);
-              setCurrentPage(1);
-            }}
-            className="w-full sm:w-64 p-2 border border-gray-300 rounded"
-          />
+          <div className="relative">
+            <input
+              type="text"
+              placeholder="Buscar servicios..."
+              value={filter}
+              onChange={(e) => {
+                setFilter(e.target.value);
+                setCurrentPage(1);
+              }}
+              onClick={() => setIsDropdownOpen(true)}
+              onBlur={() => setIsDropdownOpen(false)}
+              className="w-full sm:w-64 p-2 pl-10 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+              aria-expanded={isDropdownOpen}
+              aria-haspopup="listbox"
+            />
+
+            {isDropdownOpen && (
+              <div
+                className="absolute top-full z-10 mt-1 w-[700px] bg-white border border-gray-200 rounded-xl p-2 shadow-lg max-h-60 overflow-y-auto"
+                role="listbox"
+              >
+                {filteredServices.length > 0 ? (
+                  filteredServices.map((service) => (
+                    <div
+                      key={service.code}
+                      onMouseDown={() => handleServerSelect(service.name)}
+                      className="p-2 w-full hover:bg-blue-100 cursor-pointer text-sm font-medium text-gray-700 rounded-lg transition-colors duration-150"
+                      role="option"
+                      aria-selected="false"
+                    >
+                      {service.name}{" "}
+                      <span className="text-gray-400">({service.code})</span>
+                    </div>
+                  ))
+                ) : (
+                  <div className="p-4 text-gray-500">
+                    No se encontraron resultados
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
         </div>
         {/* Botones de Control */}
         <ControlButtons onStartAll={onStartAll} onStopAll={onStopAll} />

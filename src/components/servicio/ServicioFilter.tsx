@@ -2,7 +2,6 @@ import { Server, BarChart, Search, AlertTriangle } from "lucide-react";
 import { useState, useEffect } from "react";
 import { ServicioDTOModel } from "../../types/serviciosTypes/serviciosSA";
 
-
 interface TIndexServiciosSAProps {
   activeCount: number;
   data: ServicioDTOModel[];
@@ -16,7 +15,10 @@ const IndexServiciosSA: React.FC<TIndexServiciosSAProps> = ({
   searchTerm,
   setSearchTerm,
 }) => {
-  const [inactiveServices, setInactiveServices] = useState<ServicioDTOModel[]>(data);
+  const [inactiveServices, setInactiveServices] =
+    useState<ServicioDTOModel[]>(data);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [selectedServer, setSelectedServer] = useState<string>("");
 
   useEffect(() => {
     const updatedInactiveServices = data.filter((servidor) =>
@@ -24,7 +26,15 @@ const IndexServiciosSA: React.FC<TIndexServiciosSAProps> = ({
     );
     setInactiveServices(updatedInactiveServices);
   }, [data]);
+  const handleServerSelect = (servidor: string) => {
+    setSelectedServer(servidor);
+    setSearchTerm(servidor);
+    setIsDropdownOpen(false);
+  };
 
+  const filteredServers = data.filter((servidor) =>
+    servidor.servidor.toLowerCase().includes(searchTerm.toLowerCase())
+  );
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
       {/* Filtro de Servidores */}
@@ -33,7 +43,7 @@ const IndexServiciosSA: React.FC<TIndexServiciosSAProps> = ({
           <div className="text-lg font-medium">Filtro de Servidores</div>
           <Server className="h-4 w-4 text-muted-foreground" />
         </div>
-        <div className="relative font-sans">
+        <div className="relative font-sans ">
           <div className="absolute inset-y-9 left-0 flex items-center pl-3 pointer-events-none">
             <Search className="text-gray-400" />
           </div>
@@ -41,9 +51,34 @@ const IndexServiciosSA: React.FC<TIndexServiciosSAProps> = ({
             type="text"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
+            onClick={() => setIsDropdownOpen(true)}
+            onBlur={() => setTimeout(() => setIsDropdownOpen(false), 100)}
             placeholder="Nombre del Servidor..."
             className="p-2 pl-10 border-2 w-full h-14 rounded-xl mt-2"
           />
+          {/* Dropdown de servidores */}
+          {isDropdownOpen ? (
+            <div
+              className="absolute z-10 mt-1 w-full bg-white border border-gray-200 rounded-xl p-4 shadow-lg"
+              style={{ maxHeight: "500px", overflowY: "auto" }}
+            >
+              {filteredServers.length > 0 ? (
+                filteredServers.map((servidor) => (
+                  <div
+                    key={servidor.servidor}
+                    onMouseDown={() => handleServerSelect(servidor.servidor)}
+                    className="p-4 hover:bg-gray-200 cursor-pointer text-base font-semibold rounded-xl"
+                  >
+                    {servidor.servidor}
+                  </div>
+                ))
+              ) : (
+                <div className="p-4 text-gray-500">
+                  No se encontraron resultados
+                </div>
+              )}
+            </div>
+          ) : null}
         </div>
       </div>
 
