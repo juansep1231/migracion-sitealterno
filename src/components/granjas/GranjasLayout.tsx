@@ -8,16 +8,6 @@ import GranjasTabContent from "./GranjasTabContent";
 import ConfirmPopup from "../general/ConfirmPopup";
 import { useGranjas } from "../../hooks/granjas/useGranjas";
 
-// Generar una lista de servicios mock
-const generateMockServices = (count: number): GranjaDTOModel[] => {
-  return Array.from({ length: count }, (_, i) => ({
-    name: `WCF_Aplicacional_Service_${i + 1}`,
-    code: `172.24.${Math.floor(i / 255)}.${i % 255}`,
-    status: [0, 1, 2, 5][
-      Math.floor(Math.random() * 4)
-    ] as GranjaDTOModel["status"],
-  }));
-};
 const tabs: GranjasStatusText[] = [
   "Todos",
   "Activos",

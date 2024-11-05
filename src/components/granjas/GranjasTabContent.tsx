@@ -151,12 +151,12 @@ const GranjasTabContent: React.FC<GranjasTabContentProps> = ({
               <button
                 className="px-4 py-2 border border-gray-300 rounded hover:bg-gray-100"
                 onClick={
-                  service.status !== 0
+                  service.status !== 2
                     ? () => onStartSingle(service.code)
                     : () => onStopSingle(service.code)
                 }
               >
-                {service.status !== 0 ? "Start" : "Stop"}
+                {service.status !== 2 ? "Start" : "Stop"}
               </button>
               <div className="w-full flex justify-end">
                 {getStatusBadge(service.status)}
