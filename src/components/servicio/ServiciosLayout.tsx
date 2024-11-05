@@ -92,7 +92,7 @@ const ServiciosLayout:  React.FC<ServiciosProps> = ({ path }) => {
   useEffect(() => { 
     const active = data.reduce( 
       (count, servidor) => 
-        count + servidor.servicios.filter((s) => s.status === 1).length, 
+        count + servidor.servicios.filter((s) => s.status === 2).length, 
       0 
     ); 
     setActiveCount(active); 
