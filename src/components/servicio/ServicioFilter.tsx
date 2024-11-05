@@ -161,7 +161,6 @@ const IndexServiciosSA: React.FC<TIndexServiciosSAProps> = ({
                 </tbody>
               </table>
             </div>
-
             <div className="mt-4 flex justify-end">
               <button className="text-red-500" onClick={toggleModal}>
                 Cerrar
