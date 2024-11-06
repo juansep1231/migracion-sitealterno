@@ -7,11 +7,12 @@ import ConfirmPopup from "../general/ConfirmPopup";
 
 interface ServiciosProps {
   path: string;
+  title: string;
 }
 
 
 
-const ServiciosLayout:  React.FC<ServiciosProps> = ({ path }) => {
+const ServiciosLayout:  React.FC<ServiciosProps> = ({ path, title }) => {
   const {servers, changeServiceStateStart_Stop, AllServicesStart_Stop } = useServicioSa(path);
   const [data, setData] = useState<ServicioDTOModel[]>([]);
   
@@ -92,7 +93,7 @@ const ServiciosLayout:  React.FC<ServiciosProps> = ({ path }) => {
   useEffect(() => { 
     const active = data.reduce( 
       (count, servidor) => 
-        count + servidor.servicios.filter((s) => s.status === 1).length, 
+        count + servidor.servicios.filter((s) => s.status === 2).length, 
       0 
     ); 
     setActiveCount(active); 
@@ -138,8 +139,8 @@ const ServiciosLayout:  React.FC<ServiciosProps> = ({ path }) => {
   return ( 
     <> 
       <div> 
-        <div className="text-3xl font-bold mb-4"> 
-          Servicio Windows SA Producción 
+        <div className="text-3xl font-bold mb-4 text-[#00693c]"> 
+          {title} 
         </div>
         {/* Uso de IndexServicios */}
         <IndexServicios

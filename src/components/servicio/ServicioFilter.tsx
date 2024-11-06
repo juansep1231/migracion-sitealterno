@@ -1,4 +1,10 @@
-import { Server, BarChart, Search, AlertTriangle } from "lucide-react";
+import {
+  Server,
+  BarChart,
+  Search,
+  AlertTriangle,
+  ListCollapse,
+} from "lucide-react";
 import { useState, useEffect } from "react";
 import { ServicioDTOModel } from "../../types/serviciosTypes/serviciosSA";
 
@@ -35,9 +41,14 @@ const IndexServiciosSA: React.FC<TIndexServiciosSAProps> = ({
   const filteredServers = data.filter((servidor) =>
     servidor.servidor.toLowerCase().includes(searchTerm.toLowerCase())
   );
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const toggleModal = () => {
+    setIsModalOpen(!isModalOpen);
+  };
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-      {/* Filtro de Servidores */}
       <div className="bg-white p-4 rounded-lg border border-gray-200 shadow-xl">
         <div className="flex flex-row items-center justify-between space-y-0 pb-2">
           <div className="text-lg font-medium">Filtro de Servidores</div>
@@ -97,29 +108,67 @@ const IndexServiciosSA: React.FC<TIndexServiciosSAProps> = ({
         </div>
       </div>
 
-      {/* Servicios Inactivos */}
+      {/* Servicios Detenidos */}
       <div className="bg-white p-4 rounded-lg border border-gray-200 shadow-xl">
         <h4 className="text-lg font-semibold text-muted-foreground flex items-center">
           <AlertTriangle className="h-6 w-6 mr-3 text-yellow-500" />
           Servidores Detenidos
+          <ListCollapse
+            className="ml-auto text-blue-500"
+            onClick={toggleModal}
+          />
         </h4>
         <div className="h-20 w-full font-medium rounded-md border p-2 overflow-y-auto">
-          <ul className="text-base">
+          <ul className="text-base ">
             {inactiveServices.map((servidor) => (
               <li key={servidor.servidor} className="py-1 flex">
                 {servidor.servidor}
-                <ul>
-                  {servidor.servicios
-                    .filter((servicio) => servicio.status === 0)
-                    .map((servicio) => (
-                      <li key={servicio.name}>: {servicio.name}</li>
-                    ))}
-                </ul>
               </li>
             ))}
           </ul>
         </div>
       </div>
+      {isModalOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white p-4 rounded-lg shadow-xl w-11/12 md:w-1/2 ml-[200px] overflow-y-auto h-[870px]">
+            <h2 className="text-lg font-semibold">
+              Detalles de Servicios Detenidos
+            </h2>
+
+            <div className="overflow-y-auto max-h-[750px] mt-4">
+              <table className="min-w-full border-collapse border border-gray-200">
+                <thead>
+                  <tr>
+                    <th className="border border-gray-200 p-2">Servidor</th>
+                    <th className="border border-gray-200 p-2">Servicio</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {inactiveServices.map((servidor) =>
+                    servidor.servicios.map((servicio, index) => (
+                      <tr
+                        key={`${servidor.servidor}-${servicio.name}-${index}`}
+                      >
+                        <td className="border border-gray-200 p-2">
+                          {index === 0 ? servidor.servidor : ""}
+                        </td>
+                        <td className="border border-gray-200 p-2">
+                          {servicio.name}
+                        </td>
+                      </tr>
+                    ))
+                  )}
+                </tbody>
+              </table>
+            </div>
+            <div className="mt-4 flex justify-end">
+              <button className="text-red-500" onClick={toggleModal}>
+                Cerrar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
