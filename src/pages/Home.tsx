@@ -10,7 +10,7 @@ const Home: React.FC = () => {
           <img
             src={LogoProduBanco}
             alt="Produbanco Grupo Promerica"
-            className="h-40"
+            className="h-20"
           />
           <div className="w-[2px] h-16 bg-[#006341]"></div>
           <h1 className="text-3xl font-bold text-[#006341]">
