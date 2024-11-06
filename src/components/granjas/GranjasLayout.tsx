@@ -1,8 +1,5 @@
 import { useState } from "react";
-import {
-  GranjaDTOModel,
-  GranjasStatusText,
-} from "../../types/granjasTypes/granjasSA";
+import { GranjasStatusText } from "../../types/granjasTypes/granjasSA";
 import { Tab, TabList, TabPanel, Tabs } from "react-tabs";
 import GranjasTabContent from "./GranjasTabContent";
 import ConfirmPopup from "../general/ConfirmPopup";
