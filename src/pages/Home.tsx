@@ -10,25 +10,25 @@ const Home: React.FC = () => {
           <img
             src={LogoProduBanco}
             alt="Produbanco Grupo Promerica"
-            className="h-40"
+            className="h-20"
           />
           <div className="w-[2px] h-16 bg-[#006341]"></div>
           <h1 className="text-3xl font-bold text-[#006341]">
             Sistema Del Site Alterno
           </h1>
         </div>
-        <div className="flex justify-center mt-[200px]">
+        <div className="flex justify-center mt-[100px]">
           <Link to={"/granjassp"}>
-          <div className="text-left bg-card w-80 m-3 p-4 rounded-lg shadow hover:shadow-xl transition-shadow duration-300 col-span-1 border-l-4 border-secondary bg-white border-[#30be71]">
-            <h1 className="font-bold text-[20px]">
-              <span className="text-[#003820]  ">Robot</span>{" "}
-              <span className="text-[#78BE20]">Granjas & Servicio</span>
-            </h1>
+            <div className="text-left bg-card w-80 m-3 p-4 rounded-lg shadow hover:shadow-xl transition-shadow duration-300 col-span-1 border-l-4 border-secondary bg-white border-[#30be71]">
+              <h1 className="font-bold text-[20px]">
+                <span className="text-[#003820]  ">Robot</span>{" "}
+                <span className="text-[#78BE20]">Granjas</span>
+              </h1>
 
-            <div className="flex justify-center mt-2">
-            <Database className="text-center h-[70px] w-[70px] text-[#78BE20] m-5" />
+              <div className="flex justify-center mt-2">
+                <Database className="text-center h-[70px] w-[70px] text-[#78BE20] m-5" />
+              </div>
             </div>
-          </div>
           </Link>
           {/* 
           <div className="text-left bg-card w-80 m-3 p-4 rounded-lg shadow hover:shadow-xl transition-shadow duration-300 col-span-1 border-l-4 border-secondary bg-white border-[#30be71]">
