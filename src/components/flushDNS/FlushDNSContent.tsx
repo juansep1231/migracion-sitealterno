@@ -18,6 +18,7 @@ const FlushDNSContent: React.FC<FlushDNSContentProps> = ({
   const [filter, setFilter] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(12);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   const filteredServices = useMemo(() => {
     return services.filter((service) =>
@@ -46,12 +47,16 @@ const FlushDNSContent: React.FC<FlushDNSContentProps> = ({
       return { dns, ip };
     });
   };
-
+  const handleServerSelect = (server: string) => {
+    setFilter(server);
+    setIsDropdownOpen(false);
+  };
   return (
     <div className="mb-6">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
         <div className="flex items-center w-full sm:w-auto">
           <Search className="w-4 h-4 mr-2 text-gray-500" />
+          <div className="relative">
           <input
             type="text"
             placeholder="Buscar servidores"
@@ -60,8 +65,37 @@ const FlushDNSContent: React.FC<FlushDNSContentProps> = ({
               setFilter(e.target.value);
               setCurrentPage(1);
             }}
-            className="w-full sm:w-64 p-2 border border-gray-300 rounded"
+            onClick={() => setIsDropdownOpen(true)}
+            onBlur={() => setIsDropdownOpen(false)}
+            className="p-2 pl-10 border-2 w-full h-14 rounded-xl mt-2"
+            aria-expanded={isDropdownOpen}
+            aria-haspopup="listbox"     
           />
+          {isDropdownOpen && (
+              <div
+              className="absolute z-10 mt-1 w-full bg-white border border-gray-200 rounded-xl p-4 shadow-lg"
+              style={{ maxHeight: "500px", overflowY: "auto" }}                role="listbox"
+              >
+                {paginatedServices.length > 0 ? (
+                  paginatedServices.map((server) => (
+                    <div
+                      key={server.name}
+                      onMouseDown={() => handleServerSelect(server.name)}
+                      className="p-4 hover:bg-gray-200 cursor-pointer text-base font-semibold rounded-xl"
+                      role="option"
+                      aria-selected="false"
+                    >
+                      {server.name}
+                    </div>
+                  ))
+                ) : (
+                  <div className="p-4 text-gray-500">
+                    No se encontraron resultados
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
         </div>
         <ControlButtonsFlushDNS onFlushAll={onExecuteAll} />
       </div>
