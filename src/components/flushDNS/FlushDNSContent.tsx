@@ -1,8 +1,8 @@
 import { useMemo, useState } from "react";
-import LoadingProdubanco from "../general/Loader";
-import { ChevronLeft, ChevronRight, Search } from "lucide-react";
 import { FlushDNSDTOModel } from "../../types/flushdns/flushdns";
 import ControlButtonsFlushDNS from "./ControlButtonsFlushDNS";
+import { ChevronLeft, ChevronRight, Search } from "lucide-react";
+import LoadingProdubanco from "../general/Loader";
 
 interface FlushDNSContentProps {
   services: FlushDNSDTOModel[];
@@ -32,12 +32,19 @@ const FlushDNSContent: React.FC<FlushDNSContentProps> = ({
   );
 
   const getStatusBadge = (status: FlushDNSDTOModel["status"]) => {
-    switch (status) {
-      case 1:
-        return <LoadingProdubanco />;
-      default:
-        return <span className="hidden"></span>;
-    }
+    return status === 1 ? (
+      <LoadingProdubanco />
+    ) : (
+      <span className="hidden"></span>
+    );
+  };
+
+  // Helper function to parse the message and return DNS/IP pairs as an array of objects
+  const parseMessageToDnsIpList = (message: string) => {
+    return message.split("\n").map((line) => {
+      const [dns, ip] = line.split(":").map((part) => part.trim());
+      return { dns, ip };
+    });
   };
 
   return (
@@ -47,7 +54,7 @@ const FlushDNSContent: React.FC<FlushDNSContentProps> = ({
           <Search className="w-4 h-4 mr-2 text-gray-500" />
           <input
             type="text"
-            placeholder="Buscar servicios..."
+            placeholder="Buscar servidores"
             value={filter}
             onChange={(e) => {
               setFilter(e.target.value);
@@ -56,44 +63,75 @@ const FlushDNSContent: React.FC<FlushDNSContentProps> = ({
             className="w-full sm:w-64 p-2 border border-gray-300 rounded"
           />
         </div>
-        {/* Botones de Control */}
         <ControlButtonsFlushDNS onFlushAll={onExecuteAll} />
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-        {paginatedServices.map((server) => (
-          <div
-            key={server.name}
-            className="flex flex-col p-4 border border-gray-200 rounded-md shadow-sm bg-white"
-          >
-            <div className="flex justify-between items-start mb-4">
-              <span
-                className="text-lg font-semibold truncate"
-                title={server.name}
-              >
-                {server.name}
-              </span>
-            </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        {paginatedServices.map((server) => {
+          const dnsIpList = parseMessageToDnsIpList(server.message);
+          return (
+            <div
+              key={server.name}
+              className="flex flex-col p-2 border border-gray-200 rounded-md shadow-sm bg-white"
+            >
+              {/* Button and title section */}
+              <div className="flex justify-between items-center mb-4">
+                <span
+                  className="text-lg font-semibold truncate"
+                  title={server.name}
+                >
+                  {server.name}
+                </span>
+                <button
+                  className={`px-4 py-2 border border-gray-300 rounded ${
+                    server.status !== 0
+                      ? "bg-gray-200 cursor-not-allowed"
+                      : "hover:bg-gray-100"
+                  }`}
+                  onClick={() => onExecuteSingle(server.name)}
+                  disabled={server.status !== 0}
+                >
+                  {server.status !== 0 ? "Ejecutando" : "Start"}
+                </button>
+              </div>
 
-            <div className="mt-auto flex items-center justify-end">
-              <button
-                className={`px-4 py-2 border border-gray-300 rounded ${
-                  server.status !== 0
-                    ? "bg-gray-200 cursor-not-allowed"
-                    : "hover:bg-gray-100"
-                }`}
-                onClick={() => onExecuteSingle(server.name)}
-                disabled={server.status !== 0}
-              >
-                {server.status !== 0 ? "Ejecutando" : "Start"}
-              </button>
-              <div className="w-full flex justify-end">
+              {/* DNS and IP Table */}
+              {dnsIpList[0].ip ? (
+                <table className="w-full text-xs">
+                  <tbody>
+                    {dnsIpList.map((entry, index) => (
+                      <tr key={index} className="border-t">
+                        <td className="font-medium px-2 py-1">
+                          <div className="space-y-1">
+                            <div className="text-xs font-semibold">DNS:</div>
+                            <div className="text-xs text-muted-foreground font-normal">
+                              {entry.dns}
+                            </div>
+                          </div>
+                        </td>
+                        <td className="px-2 py-1">
+                          <div className="space-y-1">
+                            <div className="text-xs font-semibold">IP:</div>
+                            <div className="text-xs text-muted-foreground">
+                              {entry.ip}
+                            </div>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              ) : (
+                <div className="text-gray-700">{server.message}</div>
+              )}
+
+              {/* Status Badge */}
+              <div className="w-full flex justify-end mt-2">
                 {getStatusBadge(server.status)}
               </div>
-              <div className="w-full flex justify-start">{server.message}</div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
 
       <div className="flex justify-between items-center mt-6">
@@ -104,16 +142,16 @@ const FlushDNSContent: React.FC<FlushDNSContentProps> = ({
               setItemsPerPage(parseInt(e.target.value));
               setCurrentPage(1);
             }}
-            className="p-2 border border-gray-300 rounded"
+            className="p-2 border border-gray-300 rounded text-sm"
           >
-            <option value="12">12 por página</option>
-            <option value="24">24 por página</option>
-            <option value="36">36 por página</option>
-            <option value="48">48 por página</option>
+            <option value="12">12 per page</option>
+            <option value="24">24 per page</option>
+            <option value="36">36 per page</option>
+            <option value="48">48 per page</option>
           </select>
-          <span className="ml-4">
-            Mostrando {(currentPage - 1) * itemsPerPage + 1} -{" "}
-            {Math.min(currentPage * itemsPerPage, filteredServices.length)} de{" "}
+          <span className="ml-4 text-xs">
+            Showing {(currentPage - 1) * itemsPerPage + 1} -{" "}
+            {Math.min(currentPage * itemsPerPage, filteredServices.length)} of{" "}
             {filteredServices.length}
           </span>
         </div>
@@ -121,19 +159,19 @@ const FlushDNSContent: React.FC<FlushDNSContentProps> = ({
           <button
             onClick={() => setCurrentPage((prev) => Math.max(1, prev - 1))}
             disabled={currentPage === 1}
-            className=" text-white flex px-4 py-2  bg-[#8B8B8B] rounded hover:bg-[#00693c]-60 items-center"
+            className="text-white flex px-4 py-2 bg-[#8B8B8B] rounded hover:bg-[#00693c]-60 items-center"
           >
             <ChevronLeft className="h-4 w-4" />
-            Anterior
+            Previous
           </button>
           <button
             onClick={() =>
               setCurrentPage((prev) => Math.min(totalPages, prev + 1))
             }
             disabled={currentPage === totalPages}
-            className=" flex px-4 py-2 text-white bg-[#8B8B8B] rounded hover:bg-[#00693C] items-center"
+            className="flex px-4 py-2 text-white bg-[#8B8B8B] rounded hover:bg-[#00693C] items-center"
           >
-            Siguiente
+            Next
             <ChevronRight className="h-4 w-4" />
           </button>
         </div>
