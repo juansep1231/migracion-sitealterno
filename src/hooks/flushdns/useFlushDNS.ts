@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { HubConnection, HubConnectionBuilder } from "@microsoft/signalr";
 import axios from "axios";
-import { toast } from "react-toastify";
+import { useToast } from "../../hooks/ToastProvider"; 
 import { FlushDNSDTOModel, FlushDNSStatusOnly } from "../../types/flushdns/flushdns";
 import { ResponseModel } from "../../types/general/generalTypes";
 
@@ -10,6 +10,7 @@ export const useFlushDNS = (loadServerspath:string) => {
   const [count, setCount] = useState(0);
   const [loading, setLoading] = useState(false);
   const hubConnectionRef = useRef<HubConnection | null>(null);
+  const { showToast } = useToast();
   
   
   const changeClusterStateReload = (computer: string, message: string): void => {
@@ -48,7 +49,7 @@ export const useFlushDNS = (loadServerspath:string) => {
         error.response?.data?.message ||
         error.message ||
         "Error al ejecutar el flush dns";
-      toast.error(errorMessage);  
+      showToast(errorMessage, 'error'); 
       changeClusterStateReload(serverName, error.message);
     }
   };
@@ -84,7 +85,7 @@ export const useFlushDNS = (loadServerspath:string) => {
         error.response?.data?.message ||
         error.message ||
         "Error al ejecutar el flush dns general";
-      toast.error(errorMessage);
+      showToast(errorMessage, 'error');
       setServers((prevServers) =>
         prevServers.map((server) => ({
           ...server,
@@ -103,11 +104,11 @@ export const useFlushDNS = (loadServerspath:string) => {
       return response.data;
     } catch (error: any) {
       if (error.response) {
-        toast.error(`Error: ${error.response.data}`);
+        showToast(`Error: ${error.response.data}`, 'error'); 
       } else if (error.request) {
-        toast.error("No response from server");
+        showToast("No response from server", 'error'); 
       } else {
-        toast.error(`Error: ${error.message}`);
+        showToast(`Error: ${error.message}`, 'error'); 
       }
       return [];
     }
@@ -123,12 +124,12 @@ export const useFlushDNS = (loadServerspath:string) => {
         console.log(loadedServers)
         if (loadedServers && loadedServers.length > 0) {
           setCount((prevCount) => prevCount + 1);
-          toast.success("Servidores actualizados");
+          showToast("Servidores actualizados", 'success');
         }
        
       } catch {
         setServers([]);
-        toast.error("No se puede cargar los servidores");
+        showToast("No se puede cargar los servidores", 'error');
       } finally {
         setLoading(false);
       }
@@ -163,7 +164,7 @@ export const useFlushDNS = (loadServerspath:string) => {
       })
       .catch((error) => {
         console.log("Cannot initialize the hub", error);
-        toast.error("No se puede iniciar el hub");
+        showToast("No se puede iniciar el hub", 'error');
       });
   
     // Cleanup on unmount
