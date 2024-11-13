@@ -2,14 +2,13 @@ import { useState, useEffect } from 'react';
 import { HubConnection, HubConnectionBuilder } from "@microsoft/signalr";
 import { ServicioDTOModel } from "../../types/serviciosTypes/serviciosSA";
 import axios from "axios";
-import { useToast } from "../../hooks/ToastProvider";
+import { toast } from "react-toastify";
 
 // Custom hook to handle server loading and Hub connection
 export const useServicioSa = (path:string) => {
     const [servers, setServers] = useState<ServicioDTOModel[]>([]);
     const [loading, setLoading] = useState(false);
     const [hubConnection, setHubConnection] = useState<HubConnection | null>(null);
-    const { showToast } = useToast();
 
 
     const changeClusterStateReload = (computer: string, message: string): void => {
@@ -68,15 +67,15 @@ export const useServicioSa = (path:string) => {
         });
 
         connection.onreconnecting(() => {
-            showToast('Connection lost, attempting to reconnect...', 'warning'); // Replace toast.warning with showToast
+            toast.warning('Connection lost, attempting to reconnect...');
         });
 
         connection.onreconnected(() => {
-            showToast('Reconnected to the server.', 'success'); // Replace toast.success with showToast
+            toast.success('Reconnected to the server.');
         });
 
         connection.onclose(() => {
-            showToast('Connection closed, attempting to reconnect...', 'error'); // Replace toast.error with showToast
+            toast.error('Connection closed, attempting to reconnect...');
             startHubConnection(connection);
         });
 
@@ -97,10 +96,10 @@ export const useServicioSa = (path:string) => {
             const response = await axios.post(path + "?command=query", servers);
             console.log(response + "despues del response")
             
-            showToast("Servicios actualizados", 'success'); // Replace toast.success with showToast
+            toast.success("Servicios actualizados");
         } catch (error) {
             console.error(error);
-            showToast('Error al actualizar los servicios', 'error');
+            toast.error('Error al actualizar los servicios');
             servers.forEach(server => {
                 server.servicios.forEach(service => {
                     changeClusterStateReload(server.servidor, `${service.name}:5`);
@@ -123,7 +122,7 @@ export const useServicioSa = (path:string) => {
                 console.log(response.data.message + + `${actionCommand}  services: ${servicio} `);
         } catch (error) {
             console.error(error);
-            showToast('Error al iniciar el servicio', 'error');
+            toast.error('Error al iniciar el servicio');
             changeClusterStateReload(computer, `${servicio}:5`);
         }
     };
@@ -141,7 +140,7 @@ export const useServicioSa = (path:string) => {
                 }
         } catch (error) {
             console.error(error);
-            showToast('Error al iniciar todos los servicios', 'error');
+            toast.error('Error al iniciar todos los servicios');
             servers.forEach(r => {
                 r.servicios.forEach(s => {
                     changeClusterStateReload(r.servidor, `${s.name}:5`);
@@ -159,11 +158,11 @@ export const useServicioSa = (path:string) => {
                 const loadedServers = await loadServersAsync();
                 console.log(loadedServers);
                 setServers(loadedServers);
-                showToast('Servidores actualizados', 'success'); 
+                toast.success('Servidores actualizados');
                 await getServicesStatusAsync(loadedServers);
             } catch (error) {
                 setServers([]);
-                showToast('No se puede cargar los servicios', 'error');
+                toast.error('No se puede cargar los servicios');
             } finally {
                 setLoading(false);
             }

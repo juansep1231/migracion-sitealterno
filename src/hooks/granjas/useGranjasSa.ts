@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { HubConnection, HubConnectionBuilder } from "@microsoft/signalr";
 import { GranjaDTOModel, GranjaStatusOnly } from "../../types/granjasTypes/granjasSA";
 import axios from "axios";
-import { useToast } from "../../hooks/ToastProvider";
+import { toast } from "react-toastify";
 
 // Custom hook to handle server loading and Hub connection
 export const useGranjasSa = () => {
@@ -12,7 +12,6 @@ export const useGranjasSa = () => {
   const [hubConnection, setHubConnection] = useState<HubConnection | null>(
     null
   );
-  const { showToast } = useToast();
 
   const changeClusterStateReload = (cluster: string, message: string): void => {
     setServers((prevServers) =>
@@ -63,7 +62,7 @@ export const useGranjasSa = () => {
       setHubConnection(connection); // Save the connection in state
     } catch (error) {
       console.log("Cannot initialize the hub");
-      showToast("No se puede iniciar el hub", 'error');
+      toast.error("No se puede iniciar el hub");
     }
 
     try {
@@ -71,11 +70,11 @@ export const useGranjasSa = () => {
       return response.data; 
     } catch (error: any) {
       if (error.response) {
-        showToast(`Error: ${error.response.data}`, 'error'); // Replace toast.error with showToast
+        toast.error(`Error: ${error.response.data}`);
       } else if (error.request) {
-        showToast("No response from server", 'error'); // Replace toast.error with showToast
+        toast.error("No response from server");
       } else {
-        showToast(`Error: ${error.message}`, 'error'); // Replace toast.error with showToast
+        toast.error(`Error: ${error.message}`);
       }
       return [];
     }
@@ -91,11 +90,11 @@ export const useGranjasSa = () => {
 
         if (loadedServers && loadedServers.length > 0) {
           setCount((prevCount) => prevCount + 1);
-          showToast("Servidores actualizados", 'success'); // Replace toast.success with showToast
+          toast.success("Servidores actualizados");
         }
       } catch {
         setServers([]);
-        showToast("No se puede cargar los servidores", 'error'); // Replace toast.error with showToast
+        toast.error("No se puede cargar los servidores");
       } finally {
         setLoading(false); // End loading state
       }
