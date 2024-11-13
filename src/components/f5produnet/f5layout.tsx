@@ -59,7 +59,7 @@ console.log(Servidor, "Holaaaas")
           </button>
         </div>
       </div>
-      <table className="table-auto border-collapse border border-gray-300">
+      <table className="table-auto border-collapse border border-gray-300 w-full">
         <thead>
           <tr>
             <th className="border px-4 py-2">Nodo</th>
@@ -92,9 +92,24 @@ console.log(Servidor, "Holaaaas")
                             : item.session === "user-disabled" &&
                               item.state === "user-down"
                             ? "bg-gray-400 shadow-inner dimond shadow-gray-600 rotate-[45deg] py-2 px-2 mr-2"
-                            : "bg-gray-400 shadow-inner dimond shadow-gray-600 rotate-[45deg] py-2 px-2 mr-2"
+                            : ""
                         }`}
-                      ></div>
+                      >
+                        <div>
+                        {item.session === "monitor-enabled" &&
+                          item.state === "up" ? (
+                        ""
+                      ) : item.session === "user-disabled" &&
+                      item.state === "up" ? (
+                        ""
+                      ) : item.session === "user-disabled" &&
+                      item.state === "user-down" ? (
+                        ""
+                      ) : (
+                        <LoadingProdubanco />
+                      )}
+                        </div>
+                      </div>
                     </div>
                   </td>
 
