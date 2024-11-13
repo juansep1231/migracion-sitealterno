@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { HubConnection, HubConnectionBuilder } from "@microsoft/signalr";
 import { GranjaDTOModel, GranjaStatusOnly } from "../../types/granjasTypes/granjasSA";
 import axios from "axios";
-import { toast } from "react-toastify";
+import { useToast } from "../../hooks/ToastProvider";
 
 // Custom hook to handle server loading and Hub connection
 export const useGranjasSa = () => {
@@ -12,6 +12,7 @@ export const useGranjasSa = () => {
   const [hubConnection, setHubConnection] = useState<HubConnection | null>(
     null
   );
+  const { showToast } = useToast();
 
   const changeClusterStateReload = (cluster: string, message: string): void => {
     setServers((prevServers) =>
@@ -22,7 +23,7 @@ export const useGranjasSa = () => {
           if (!isNaN(parsedStatus) && [0, 1, 2, 5].includes(parsedStatus)) {
             newStatus = parsedStatus as GranjaStatusOnly["status"];
           } else if (message === "Loading") {
-            newStatus = "Loading";
+            newStatus = "Cargando";
           } else {
             newStatus = 5;
           }
@@ -62,7 +63,7 @@ export const useGranjasSa = () => {
       setHubConnection(connection); // Save the connection in state
     } catch (error) {
       console.log("Cannot initialize the hub");
-      toast.error("No se puede iniciar el hub");
+      showToast("No se puede iniciar el hub", 'error');
     }
 
     try {
@@ -70,11 +71,11 @@ export const useGranjasSa = () => {
       return response.data; 
     } catch (error: any) {
       if (error.response) {
-        toast.error(`Error: ${error.response.data}`);
+        showToast(`Error: ${error.response.data}`, 'error'); // Replace toast.error with showToast
       } else if (error.request) {
-        toast.error("No response from server");
+        showToast("No response from server", 'error'); // Replace toast.error with showToast
       } else {
-        toast.error(`Error: ${error.message}`);
+        showToast(`Error: ${error.message}`, 'error'); // Replace toast.error with showToast
       }
       return [];
     }
@@ -90,11 +91,11 @@ export const useGranjasSa = () => {
 
         if (loadedServers && loadedServers.length > 0) {
           setCount((prevCount) => prevCount + 1);
-          toast.success("Servidores actualizados");
+          showToast("Servidores actualizados", 'success'); // Replace toast.success with showToast
         }
       } catch {
         setServers([]);
-        toast.error("No se puede cargar los servidores");
+        showToast("No se puede cargar los servidores", 'error'); // Replace toast.error with showToast
       } finally {
         setLoading(false); // End loading state
       }

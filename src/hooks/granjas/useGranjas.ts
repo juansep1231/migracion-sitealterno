@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { HubConnection, HubConnectionBuilder } from "@microsoft/signalr";
 import { GranjaCodeOnly, GranjaDTOModel, GranjaStatusOnly } from "../../types/granjasTypes/granjasSA";
 import axios from "axios";
-import { toast } from "react-toastify";
+import { useToast } from "../../hooks/ToastProvider"; 
 import { ResponseModel } from "../../types/general/generalTypes";
 
 
@@ -13,6 +13,7 @@ export const useGranjas = (path:string) => {
   const [count, setCount] = useState(0);
   const [loading, setLoading] = useState(false);
   const hubConnectionRef = useRef<HubConnection | null>(null);
+  const { showToast } = useToast(); 
   
   
 
@@ -64,7 +65,7 @@ export const useGranjas = (path:string) => {
         error.response?.data?.message ||
         error.message ||
         "Error al iniciar los clusters";
-        toast.error(errorMessage);
+        showToast(errorMessage, 'error');
         changeClusterStateReload(code, "5");
     }
   };
@@ -98,7 +99,7 @@ export const useGranjas = (path:string) => {
         error.response?.data?.message ||
         error.message ||
         "Error al iniciar los clusters";
-      toast.error(errorMessage);
+        showToast(errorMessage, 'error');
 
       servers.forEach((server) => {
         changeClusterStateReload(server.code, "5");
@@ -117,11 +118,11 @@ export const useGranjas = (path:string) => {
       return response.data;
     } catch (error: any) {
       if (error.response) {
-        toast.error(`Error: ${error.response.data}`);
+        showToast(`Error: ${error.response.data}`, 'error'); // Replace toast.error with showToast
       } else if (error.request) {
-        toast.error("No response from server");
+        showToast("No response from server", 'error'); // Replace toast.error with showToast
       } else {
-        toast.error(`Error: ${error.message}`);
+        showToast(`Error: ${error.message}`, 'error'); // Replace toast.error with showToast
       }
       return [];
     }
@@ -142,13 +143,13 @@ console.log("ejecutandogetnlbstatus")
 
 
       console.log("mensajeeeee",response.data.message);
-      toast.success("NLBs actualizadas");
+      showToast("NLBs actualizadas", 'success');
     } catch (error: any) {
       const errorMessage =
         error.response?.data?.message ||
         error.message ||
         "An error occurred while getting NLB status.";
-      toast.error(errorMessage);
+        showToast(errorMessage, 'error');
 
       loadedServers.forEach((server) => {
         changeClusterStateReload(server.code, "5");
@@ -167,14 +168,14 @@ console.log("ejecutandogetnlbstatus")
         console.log(loadedServers)
         if (loadedServers && loadedServers.length > 0) {
           setCount((prevCount) => prevCount + 1);
-          toast.success("Servidores actualizados");
+          showToast("Servidores actualizados", 'success');
 
       await getNLBStatusAsync(loadedServers);
         }
        
       } catch {
         setServers([]);
-        toast.error("No se puede cargar los servidores");
+        showToast("No se puede cargar los servidores", 'error');
       } finally {
         setLoading(false);
       }
@@ -209,7 +210,7 @@ console.log("ejecutandogetnlbstatus")
       })
       .catch((error) => {
         console.log("Cannot initialize the hub", error);
-        toast.error("No se puede iniciar el hub");
+        showToast("No se puede iniciar el hub", 'error');
       });
   
     // Cleanup on unmount
