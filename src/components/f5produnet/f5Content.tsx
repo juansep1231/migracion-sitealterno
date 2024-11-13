@@ -116,8 +116,6 @@ const F5Content: React.FC<ServiciosProps> = ({ ubicacion }) => {
     setError("");
     setIsLoading(true);
     await getProdunetNodes(eUser, password);
-    console.log("nodesUIO:", nodesUIO);
-    console.log("nodesGYE:", nodesGYE);
 
     if (!nodesUIO && !nodesGYE) {
       toast.error(
@@ -135,7 +133,7 @@ const F5Content: React.FC<ServiciosProps> = ({ ubicacion }) => {
   
   return (
     <>
-      {isLoggedIn ? (
+      {!isLoggedIn ? (
         <F5Login onhandleSubmit={handleSubmit} onisLoading={isLoading} />
       ) : (
         <div className="">
