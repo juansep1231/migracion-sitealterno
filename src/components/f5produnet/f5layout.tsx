@@ -6,6 +6,7 @@ import {
   F5ProduNetDTOModel,
 } from "../../types/f5produnetTypes/f5produnet";
 
+
 interface TablaF5ProduNetProps {
   Titulo: string;
   Servidor: F5PoolMembersModel | null;
@@ -30,7 +31,7 @@ const TablaF5ProduNet: React.FC<TablaF5ProduNetProps> = ({
   const location =
     Titulo === "Guayaquil" ? "GYE" : Titulo === "Quito" ? "UIO" : "";
  
-
+console.log(Servidor, "Holaaaas")
   return (
     <div className="p-8 bg-white rounded-lg border border-gray-200 shadow-2xl">
       <div className="flex justify-between items-center mb-4">
@@ -48,7 +49,7 @@ const TablaF5ProduNet: React.FC<TablaF5ProduNetProps> = ({
             onClick={() => onForceOfflineAllAll()}
             className="flex-1 bg-yellow-500 flex items-center rounded-lg justify-center text-white"
           >
-            Force Offline Nodos UIO
+            Force Offline Nodos {location}
           </button>
           <button
             onClick={() => onStopAll()}
@@ -70,7 +71,7 @@ const TablaF5ProduNet: React.FC<TablaF5ProduNetProps> = ({
           <tbody>
             {Array.isArray(Servidor?.items) &&
               Servidor.items.map((item: F5ProduNetDTOModel, index: number) => (
-                <motion.tr
+                <motion.tr  
                   key={index}
                   initial={{ opacity: 0, y: -10 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -90,8 +91,8 @@ const TablaF5ProduNet: React.FC<TablaF5ProduNetProps> = ({
                             ? "py-3 px-3 mr-2 bg-gray-400 shadow-inner shadow-gray-600 rounded-full"
                             : item.session === "user-disabled" &&
                               item.state === "user-down"
-                            ? "bg-gray-400 shadow-inner dimond shadow-gray-600 rotate-[45deg]"
-                            : "bg-gray-400 shadow-inner dimond shadow-gray-600 rotate-[45deg]"
+                            ? "bg-gray-400 shadow-inner dimond shadow-gray-600 rotate-[45deg] py-2 px-2 mr-2"
+                            : "bg-gray-400 shadow-inner dimond shadow-gray-600 rotate-[45deg] py-2 px-2 mr-2"
                         }`}
                       ></div>
                     </div>
@@ -112,7 +113,8 @@ const TablaF5ProduNet: React.FC<TablaF5ProduNetProps> = ({
                           : "border  bg-green-500 hover:bg-green-500 text-white"
                       } text-black flex text-center w-[60px] h-10 justify-center items-center px-2 py-1 rounded-lg mr-2`}
                     >
-                      {item.state === "1" ? (
+                      {item.state === "up" &&
+                        item.session === "monitor-enabled" ? (
                         <Pause className="h-5 w-5" />
                       ) : (
                         <Play className="h-5 w-5" />
