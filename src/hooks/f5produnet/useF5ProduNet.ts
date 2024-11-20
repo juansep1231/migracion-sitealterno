@@ -6,6 +6,7 @@ import { AxiosError } from "axios"; // Asegúrate de importar AxiosError
 import {
   GetPoolMembersDTOModel,
   F5PoolMembersModel,
+  F5ProduNetDTOModel
 } from "../../types/f5produnetTypes/f5produnet";
 // Custom hook to handle F5Produnet loading and Hub connection
 export const useF5ProduNet = () => {
@@ -25,12 +26,10 @@ export const useF5ProduNet = () => {
       poolName: "Pool_Produnet",
     };
     setF5QueryModel(updatedModel);
-   
-    // Collect data from both nodes
+  
     const nodesUIOData = await getUIONodes(updatedModel);
     const nodesGYEData = await getGYENodes(updatedModel);
    
-    // Return the collected data
     return { nodesUIO: nodesUIOData, nodesGYE: nodesGYEData };
   };
 
@@ -99,7 +98,6 @@ export const useF5ProduNet = () => {
       },
     };
 
-    // Configuración de los datos para los nodos GYE
     const dataGYE = {
       f5Nodes: nodesGYE?.items.map((node) => ({
         name: node.name.split(":")[0],
@@ -115,14 +113,12 @@ export const useF5ProduNet = () => {
     };
 
     try {
-      // Enviar la solicitud para habilitar los nodos de UIO
       const responseUIO = await axios.patch(
         `${path}?location=${UIOLocation}`,
         dataUIO
       );
       toast.success(`Nodos UIO habilitados: ${responseUIO.data.message}`);
 
-      // Enviar la solicitud para habilitar los nodos de GYE
       const responseGYE = await axios.patch(
         `${path}?location=${GYELocation}`,
         dataGYE
@@ -134,80 +130,62 @@ export const useF5ProduNet = () => {
     }
   };
 
-  // const changeNodeStateReload = (
-  //   node: string,
-  //   session: string,
-  //   state: string
-  // ) => {
-  //   const nodeTemp =
-  //     nodesUIO?.items.find((r) => r.name === node) ||
-  //     nodesGYE?.items.find((r) => r.name === node);
-
-  //   if (nodeTemp) {
-  //     if (state) {
-  //       nodeTemp.session = session;
-  //       nodeTemp.state = state;
-  //     }
-  //   }
-  // };
-  
-  const changeNodeStateReload = (node: string, session: string, state: string): boolean => {
-    const nodeuio = nodesUIO?.items.findIndex((r) => r.name === node);
-    const nodegye = nodesGYE?.items.findIndex((r) => r.name === node);
-
 
   
-    if (nodeuio !== -1) {
-      setNodesUIO((prevNodes) => {
-        if (!prevNodes) return prevNodes; // Asegúrate de que prevNodes no sea undefined o null
-  
-        const newItems = prevNodes.items.map((item, index) =>
-          index === nodeuio
-            ? { ...item, session: session, state: state }
-            : item
-        );
-  
-        return { ...prevNodes, items: newItems };
-      });
-  
-      return true; // Node was found and updated
+  const changeNodeStateReload = (
+    node: string,
+    session: string,
+    state: string
+  ): void => {
+    let nodeIndex: number;
+    let updated = false;
+ 
+    if (nodesUIO && nodesUIO.items) {
+      nodeIndex = nodesUIO.items.findIndex((r) => r.name === node);
+      if (nodeIndex >= 0) {
+        setNodesUIO((prevNodes) => {
+          if (!prevNodes) return prevNodes;
+          const newItems = [...prevNodes.items];
+          newItems[nodeIndex] = { ...newItems[nodeIndex], session, state };
+          return { ...prevNodes, items: newItems };
+        });
+        updated = true;
+      }
     }
-    if (nodegye !== -1) {
-      setNodesGYE((prevNodes) => {
-        if (!prevNodes) return prevNodes; // Asegúrate de que prevNodes no sea undefined o null
-  
-        const newItems = prevNodes.items.map((item, index) =>
-          index === nodegye
-            ? { ...item, session: session, state: state }
-            : item
-        );
-  
-        return { ...prevNodes, items: newItems };
-      });
-  
-      return true; // Node was found and updated
+ 
+    if (!updated && nodesGYE && nodesGYE.items) {
+      nodeIndex = nodesGYE.items.findIndex((r) => r.name === node);
+      if (nodeIndex >= 0) {
+        setNodesGYE((prevNodes) => {
+          if (!prevNodes) return prevNodes;
+          const newItems = [...prevNodes.items];
+          newItems[nodeIndex] = { ...newItems[nodeIndex], session, state };
+          return { ...prevNodes, items: newItems };
+        });
+        updated = true;
+      }
     }
-  
-    return false; // Node not found
+ 
+    if (updated) {
+      console.log(`Node ${node} state updated to session: ${session}, state: ${state}`);
+    } else {
+      console.error(`Node ${node} not found in either UIO or GYE`);
+    }
   };
   
-
   
-  
-   
-
   const Start_Disable_ForceOfflineNodeAsync = async (
     node: string,
     location: string,
     action: string,
     user: string
-  ) => {
+  ): Promise<void> => {
     try {
       let path = `${import.meta.env.VITE_API_BASE_URL_ADMINISTRACIONF5}${
         import.meta.env.VITE_API_ENDPOINT_STARTNODEASYNC
       }`;
-      let model = null;
-
+      let model: F5ProduNetDTOModel | undefined = undefined;
+ 
       switch (location.toUpperCase()) {
         case UIOLocation:
           model = nodesUIO?.items.find((r) => r.name === node);
@@ -218,10 +196,10 @@ export const useF5ProduNet = () => {
           path += `?location=${GYELocation}`;
           break;
         default:
-          model = null;
+          model = undefined;
           break;
       }
-
+ 
       if (model) {
         const data = {
           f5Nodes: [
@@ -235,9 +213,11 @@ export const useF5ProduNet = () => {
           ],
           poolData: F5QueryModel,
         };
-
-        const response = await axios.patch(path, data);
+ 
+        const response = await axios.patch<{ message: string }>(path, data);
         toast.success(response.data.message);
+ 
+        changeNodeStateReload(model.name, `user-${action}`, `user-${user}`);
       } else {
         toast.error("Nodo no encontrado");
       }
