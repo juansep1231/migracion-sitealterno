@@ -23,49 +23,57 @@ export const useF5ProduNet = () => {
       user: usuario,
       password: contraseña,
       poolName: "Pool_Produnet",
-  };
+    };
     setF5QueryModel(updatedModel);
-
-    await getUIONodes(updatedModel);
-    await getGYENodes(updatedModel);
+   
+    // Collect data from both nodes
+    const nodesUIOData = await getUIONodes(updatedModel);
+    const nodesGYEData = await getGYENodes(updatedModel);
+   
+    // Return the collected data
+    return { nodesUIO: nodesUIOData, nodesGYE: nodesGYEData };
   };
 
   // Función para obtener nodos UIO
   const getUIONodes = async (queryModel: GetPoolMembersDTOModel) => {
     setNodesUIO(null);
-
+   
     const path = `${import.meta.env.VITE_API_BASE_URL_ADMINISTRACIONF5}${
       import.meta.env.VITE_API_ENDPOINT_F5PRODUNEET
     }`;
-
+   
     try {
       const response = await axios.post(
         `${path}?location=${UIOLocation}`,
         queryModel
       );
       setNodesUIO(response.data);
+      return response.data; 
     } catch (error) {
       const axiosError = error as AxiosError;
       toast.error(axiosError.message);
+      return null; 
     }
   };
-
+  //Nodos GYE
   const getGYENodes = async (queryModel: GetPoolMembersDTOModel) => {
     setNodesGYE(null);
-
+   
     const path = `${import.meta.env.VITE_API_BASE_URL_ADMINISTRACIONF5}${
       import.meta.env.VITE_API_ENDPOINT_F5PRODUNEET
     }`;
-
+   
     try {
       const response = await axios.post(
         `${path}?location=${GYELocation}`,
         queryModel
       );
       setNodesGYE(response.data);
+      return response.data; 
     } catch (error) {
       const axiosError = error as AxiosError;
       toast.error(axiosError.message);
+      return null; 
     }
   };
 
@@ -261,7 +269,6 @@ export const useF5ProduNet = () => {
         toast.error("No se puede iniciar el hub");
       }
     };
-
     initializeConnection();
 
     return () => {

@@ -4,7 +4,10 @@ import { useF5ProduNet } from "../../hooks/f5produnet/useF5ProduNet";
 import { toast } from "react-toastify";
 import F5Layout from "../../components/f5produnet/f5layout";
 import { div } from "framer-motion/client";
-import { F5ProduNetDTOModel, F5PoolMembersModel } from "../../types/f5produnetTypes/f5produnet";
+import {
+  F5ProduNetDTOModel,
+  F5PoolMembersModel,
+} from "../../types/f5produnetTypes/f5produnet";
 import ConfirmPopup from "../general/ConfirmPopup";
 
 interface ServiciosProps {
@@ -112,12 +115,13 @@ const F5Content: React.FC<ServiciosProps> = ({ ubicacion }) => {
     setShowConfirm(true);
   };
 
+  // Inside your F5Content component
+
   const handleSubmit = async (eUser: string, password: string) => {
     setError("");
     setIsLoading(true);
-    await getProdunetNodes(eUser, password);
-
-    if (!nodesUIO && !nodesGYE) {
+    const data = await getProdunetNodes(eUser, password);
+    if (!data || (!data.nodesUIO && !data.nodesGYE)) {
       toast.error(
         "No se puede cargar los servidores, compruebe sus credenciales"
       );
@@ -130,7 +134,7 @@ const F5Content: React.FC<ServiciosProps> = ({ ubicacion }) => {
     setIsLoggedIn(true);
     setIsLoading(false);
   };
-  
+
   return (
     <>
       {!isLoggedIn ? (
@@ -138,27 +142,27 @@ const F5Content: React.FC<ServiciosProps> = ({ ubicacion }) => {
       ) : (
         <div className="">
           <div className="text-3xl font-bold mb-4">F5 ProduNet</div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4">
-              <F5Layout
-                Titulo= "Quito"
-                Servidor={nodesUIO}
-                onStartSingle={handleStartSingleAction}
-                onStopSingle={handleStopSingleAction}
-                onForceOfflineSingle={handleForceOfflineSingleAction}
-                onStartAll={handleEnabledtAll}
-                onStopAll={handleDisabledAll}
-                onForceOfflineAllAll={handleForceOfflineAll}
-              />
+          <div className="grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-2 gap-4">
             <F5Layout
-                Titulo= "Guayaquil"
-                Servidor={nodesGYE}
-                onStartSingle={handleStartSingleAction}
-                onStopSingle={handleStopSingleAction}
-                onForceOfflineSingle={handleForceOfflineSingleAction}
-                onStartAll={handleEnabledtAll}
-                onStopAll={handleDisabledAll}
-                onForceOfflineAllAll={handleForceOfflineAll}
-              />
+              Titulo="Quito"
+              Servidor={nodesUIO}
+              onStartSingle={handleStartSingleAction}
+              onStopSingle={handleStopSingleAction}
+              onForceOfflineSingle={handleForceOfflineSingleAction}
+              onStartAll={handleEnabledtAll}
+              onStopAll={handleDisabledAll}
+              onForceOfflineAllAll={handleForceOfflineAll}
+            />
+            <F5Layout
+              Titulo="Guayaquil"
+              Servidor={nodesGYE}
+              onStartSingle={handleStartSingleAction}
+              onStopSingle={handleStopSingleAction}
+              onForceOfflineSingle={handleForceOfflineSingleAction}
+              onStartAll={handleEnabledtAll}
+              onStopAll={handleDisabledAll}
+              onForceOfflineAllAll={handleForceOfflineAll}
+            />
           </div>
         </div>
       )}

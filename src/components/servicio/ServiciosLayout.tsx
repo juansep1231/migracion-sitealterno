@@ -162,7 +162,7 @@ const ServiciosLayout:  React.FC<ServiciosProps> = ({ path, title }) => {
         ))}
       </div>
       {/* Uso de TablaServicios */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4"> 
+      <div className="grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-2 gap-4"> 
         {currentServers.length > 0 ? (
           currentServers.map((servers, servidorIndex) => ( 
             <TablaServicios 
