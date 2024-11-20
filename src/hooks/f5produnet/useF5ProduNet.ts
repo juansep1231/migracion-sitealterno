@@ -137,39 +137,39 @@ export const useF5ProduNet = () => {
     session: string,
     state: string
   ): void => {
-    let nodeIndex: number;
+    let nodeIndexUIO = nodesUIO?.items.findIndex((r) => r.name === node);
+    let nodeIndexGYE = nodesGYE?.items.findIndex((r) => r.name === node);
     let updated = false;
  
-    if (nodesUIO && nodesUIO.items) {
-      nodeIndex = nodesUIO.items.findIndex((r) => r.name === node);
-      if (nodeIndex >= 0) {
+    if(nodeIndexUIO){
+      if (nodeIndexUIO !== -1) {
         setNodesUIO((prevNodes) => {
           if (!prevNodes) return prevNodes;
           const newItems = [...prevNodes.items];
-          newItems[nodeIndex] = { ...newItems[nodeIndex], session, state };
+          newItems[nodeIndexUIO] = { ...newItems[nodeIndexUIO], session, state };
           return { ...prevNodes, items: newItems };
         });
         updated = true;
       }
     }
- 
-    if (!updated && nodesGYE && nodesGYE.items) {
-      nodeIndex = nodesGYE.items.findIndex((r) => r.name === node);
-      if (nodeIndex >= 0) {
+
+    if(nodeIndexGYE){
+    if (nodeIndexGYE !== -1) {
+
         setNodesGYE((prevNodes) => {
           if (!prevNodes) return prevNodes;
           const newItems = [...prevNodes.items];
-          newItems[nodeIndex] = { ...newItems[nodeIndex], session, state };
+          newItems[nodeIndexGYE] = { ...newItems[nodeIndexGYE], session, state };
           return { ...prevNodes, items: newItems };
         });
         updated = true;
-      }
     }
+  }
  
     if (updated) {
-      console.log(`Node ${node} state updated to session: ${session}, state: ${state}`);
+      console.log(`Nodo ${node} actualizado session: ${session}, state: ${state}`);
     } else {
-      console.error(`Node ${node} not found in either UIO or GYE`);
+      console.error(`Nodo ${node} no encontrado either UIO or GYE`);
     }
   };
   
