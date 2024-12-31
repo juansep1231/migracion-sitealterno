@@ -2,15 +2,15 @@ import { useState, useEffect } from "react";
 import { HubConnection, HubConnectionBuilder } from "@microsoft/signalr";
 import axios from "axios";
 import { toast } from "react-toastify";
-import { AxiosError } from "axios"; // Asegúrate de importar AxiosError
+import { AxiosError } from "axios"; 
 import {
   GetPoolMembersDTOModel,
   F5PoolMembersModel,
   F5ProduNetDTOModel
 } from "../../types/f5produnetTypes/f5produnet";
-// Custom hook to handle F5Produnet loading and Hub connection
+
 export const useF5ProduNet = () => {
-  const [F5QueryModel, setF5QueryModel] = useState<GetPoolMembersDTOModel>(); // Asegúrate de inicializar con las propiedades necesarias
+  const [F5QueryModel, setF5QueryModel] = useState<GetPoolMembersDTOModel>(); 
   const [nodesUIO, setNodesUIO] = useState<F5PoolMembersModel | null>(null);
   const [nodesGYE, setNodesGYE] = useState<F5PoolMembersModel | null>(null);
   const UIOLocation = "UIO";
@@ -137,12 +137,13 @@ export const useF5ProduNet = () => {
     session: string,
     state: string
   ): void => {
-    let nodeIndexUIO = nodesUIO?.items.findIndex((r) => r.name === node);
-    let nodeIndexGYE = nodesGYE?.items.findIndex((r) => r.name === node);
     let updated = false;
- 
-    if(nodeIndexUIO){
-      if (nodeIndexUIO !== -1) {
+  
+    if (nodesUIO && nodesUIO.items) {
+      const nodeIndexUIO = nodesUIO.items.findIndex((r) => r.name === node);
+      console.log("nodeIndexUIO", nodeIndexUIO);
+      if (nodeIndexUIO !== undefined && nodeIndexUIO >= 0) {
+        console.log("nodeIndexUIO diferente de -1");
         setNodesUIO((prevNodes) => {
           if (!prevNodes) return prevNodes;
           const newItems = [...prevNodes.items];
@@ -152,10 +153,12 @@ export const useF5ProduNet = () => {
         updated = true;
       }
     }
-
-    if(nodeIndexGYE){
-    if (nodeIndexGYE !== -1) {
-
+  
+    if (!updated && nodesGYE && nodesGYE.items) {
+      const nodeIndexGYE = nodesGYE.items.findIndex((r) => r.name === node);
+      console.log("nodeIndexGYE", nodeIndexGYE);
+      if (nodeIndexGYE !== undefined && nodeIndexGYE >= 0) {
+        console.log("nodeIndexGYE diferente de -1");
         setNodesGYE((prevNodes) => {
           if (!prevNodes) return prevNodes;
           const newItems = [...prevNodes.items];
@@ -163,16 +166,15 @@ export const useF5ProduNet = () => {
           return { ...prevNodes, items: newItems };
         });
         updated = true;
+      }
     }
-  }
- 
+  
     if (updated) {
       console.log(`Nodo ${node} actualizado session: ${session}, state: ${state}`);
     } else {
       console.error(`Nodo ${node} no encontrado either UIO or GYE`);
     }
   };
-  
   
   const Start_Disable_ForceOfflineNodeAsync = async (
     node: string,

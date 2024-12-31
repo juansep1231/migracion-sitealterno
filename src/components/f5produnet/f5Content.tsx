@@ -3,11 +3,6 @@ import F5Login from "./f5Login";
 import { useF5ProduNet } from "../../hooks/f5produnet/useF5ProduNet";
 import { toast } from "react-toastify";
 import F5Layout from "../../components/f5produnet/f5layout";
-import { div } from "framer-motion/client";
-import {
-  F5ProduNetDTOModel,
-  F5PoolMembersModel,
-} from "../../types/f5produnetTypes/f5produnet";
 import ConfirmPopup from "../general/ConfirmPopup";
 
 interface ServiciosProps {
